@@ -4,13 +4,19 @@ import { featureTabs } from './dreams/feature-tabs.js';
 import { destinationAnimation } from './dreams/destination-animation.js';
 import { listBullet } from './dreams/list-bullet.js';
 
+import { contact } from './contacts/contact.js';
+import { form } from './contacts/form.js';
+import { userLocation } from './contacts/user-location.js';
+
 
 loader();
 swiperTestimonials();
 featureTabs();
-
-
-
-
 destinationAnimation();
 listBullet();
+
+
+
+contact();
+form();
+userLocation();
