@@ -2,8 +2,6 @@ export function featureTabs() {
     const element = document.querySelector(".feature-dropdown-toggle");
     if (!element) return;
 
-    console.log("feature");
-
     $(".w-condition-invisible").remove();
 
     // Hover animation
