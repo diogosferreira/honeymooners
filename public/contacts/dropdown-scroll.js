@@ -1,4 +1,4 @@
-export function contact() {
+export function dropdownScroll() {
     const element = document.querySelector('[data-lenis-allow-scroll]');
     if (!element) return;
 

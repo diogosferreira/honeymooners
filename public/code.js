@@ -7,6 +7,7 @@ import { listBullet } from './dreams/list-bullet.js';
 import { contact } from './contacts/contact.js';
 import { form } from './contacts/form.js';
 import { userLocation } from './contacts/user-location.js';
+import { dropdownScroll } from './contacts/dropdown-scroll.js';
 
 
 loader();
@@ -20,3 +21,4 @@ listBullet();
 contact();
 form();
 userLocation();
+dropdownScroll();
