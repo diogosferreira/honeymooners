@@ -1,2 +1,6 @@
-console.log("file");
-console.log("file");
+import { loader } from './loader.js';
+
+
+loader();
+
+console.log("file code");
