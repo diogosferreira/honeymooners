@@ -3,7 +3,6 @@ export function destinationAnimation() {
     if (!element) return;
 
 
-    console.log("destination");
 
     //REmove the other
     if (window.location.pathname.includes("/trips")) {

@@ -2,7 +2,7 @@ export function companyGSAP() {
     const element = document.querySelector(".company-card");
     if (!element) return;
 
-    console.log("companyGSAP")
+
 
     gsap.fromTo(
         ".company-card",

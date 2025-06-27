@@ -16,7 +16,7 @@ export function GSAPParallax() {
     if (!hasAny) return;
 
 
-    console.log("GSAPParallax");
+
 
 
     $("[parallax-2]").each(function () {

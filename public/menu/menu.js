@@ -2,8 +2,6 @@ export function menu() {
     const element = document.querySelector(".nav_fixed");
     if (!element) return;
 
-    console.log("menu");
-
     var whiteMenu = false;
     if ($(".menu-button[white-border-button-menu='white']").length > 0) {
         whiteMenu = true;

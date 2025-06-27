@@ -2,7 +2,6 @@ export function form() {
     const element = document.querySelector(".contact-form_wrapper");
     if (!element) return;
 
-    console.log("form");
 
     $(".radio-button-border").on("click", function () {
         $(this)

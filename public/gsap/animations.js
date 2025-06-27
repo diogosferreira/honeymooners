@@ -13,7 +13,7 @@ export function GSAPAnimations() {
     const hasAny = selectors.some(selector => $(selector).length > 0);
     if (!hasAny) return;
 
-    console.log("GSAPAnimations");
+
 
     //opacity
     $("[opacity-gsap-top-90]").each(function () {

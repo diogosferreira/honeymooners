@@ -2,7 +2,6 @@ export function storyGSAP() {
     const element = document.querySelector(".section_our-story");
     if (!element) return;
 
-    console.log("storyGSAP");
 
     gsap.fromTo(
         "[story-image]",

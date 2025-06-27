@@ -2,7 +2,7 @@ export function GSAPTitles() {
     const element = document.querySelector("[text-split]");
     if (!element) return;
 
-    console.log("GSAPTitles")
+
 
     initSplitText();
 

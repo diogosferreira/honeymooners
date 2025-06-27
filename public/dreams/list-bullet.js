@@ -3,7 +3,6 @@ export function listBullet() {
     if (!element) return;
 
 
-    console.log("list bullet");
 
 
     $("[bullet-points_wrapper]").each(function () {

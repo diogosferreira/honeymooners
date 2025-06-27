@@ -2,7 +2,7 @@ export function dropdownScroll() {
     const element = document.querySelector('[data-lenis-allow-scroll]');
     if (!element) return;
 
-    console.log("dropdown Scroll");
+
 
     document.querySelectorAll('[data="lenis-allow-scroll"]').forEach((el) => {
         el.addEventListener(

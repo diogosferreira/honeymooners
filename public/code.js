@@ -40,9 +40,6 @@ travelWithUs();
 storyGSAP();
 swiperTrips();
 companyGSAP();
-
-
-
 menu();
 GSAPTitles();
 GSAPParallax();

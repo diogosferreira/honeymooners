@@ -2,7 +2,6 @@ export function swiperTrips() {
     const element = document.querySelector(".story_component");
     if (!element) return;
 
-    console.log("swiperTrips");
 
     // Count the number of elements with the class '.testimonial-share_component'
     const testimonialCount = document.querySelectorAll(".story_component").length;

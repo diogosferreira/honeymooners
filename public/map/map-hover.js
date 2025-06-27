@@ -2,8 +2,6 @@ export function map() {
     const element = document.querySelector(".map-square-dot");
     if (!element) return;
 
-    console.log("map");
-
     $(".map-square-dot").hover(
         function () {
             $(".map-square-dot")

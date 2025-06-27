@@ -2,7 +2,6 @@ export function chooseSection() {
     const element = document.querySelector(".choose_wrapper");
     if (!element) return;
 
-    console.log("chooseSection");
 
 
     document

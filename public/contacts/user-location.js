@@ -2,7 +2,6 @@ export function userLocation() {
     const element = document.querySelector(".contact-form_wrapper");
     if (!element) return;
 
-    console.log("user Location");
 
     const path = window.location.pathname;
 
