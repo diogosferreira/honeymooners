@@ -10,6 +10,9 @@ import { dropdownScroll } from './contacts/dropdown-scroll.js';
 import { filters } from './blog/filters.js';
 import { travelWithUs } from './travel-with-us/travel-with-us.js';
 
+import { storyGSAP } from './our-story/story-gsap-animations.js';
+import { swiperTrips } from './swiper/swiper-trips.js';
+
 
 loader();
 swiperTestimonials();
@@ -21,5 +24,8 @@ form();
 userLocation();
 dropdownScroll();
 filters();
-
 travelWithUs();
+
+
+storyGSAP();
+swiperTrips();
