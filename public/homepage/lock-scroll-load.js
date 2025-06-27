@@ -1,4 +1,6 @@
 export function lockScrollLoader() {
+
+    console.log("lockScrollLoader prev");
     const element = document.querySelector(".section_loader");
     if (!element) return;
 

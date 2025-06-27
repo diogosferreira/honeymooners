@@ -16,6 +16,7 @@ import { companyGSAP } from './company/company-gsap-animations.js';
 
 
 loader();
+lockScrollLoader();
 swiperTestimonials();
 featureTabs();
 destinationAnimation();
@@ -31,4 +32,3 @@ swiperTrips();
 companyGSAP();
 
 
-lockScrollLoader();

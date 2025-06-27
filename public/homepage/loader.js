@@ -1,4 +1,7 @@
 export function loader() {
+    console.log("loader prev");
+
+
     const element = document.querySelector(".section_loader");
     if (!element) return;
 
