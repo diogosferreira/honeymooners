@@ -7,9 +7,8 @@ import { contact } from './contacts/contact.js';
 import { form } from './contacts/form.js';
 import { userLocation } from './contacts/user-location.js';
 import { dropdownScroll } from './contacts/dropdown-scroll.js';
-
-
 import { filters } from './blog/filters.js';
+import { travelWithUs } from './travel-with-us/travel-with-us.js';
 
 
 loader();
@@ -21,6 +20,6 @@ contact();
 form();
 userLocation();
 dropdownScroll();
-
-
 filters();
+
+travelWithUs();
