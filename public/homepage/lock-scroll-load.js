@@ -1,10 +1,6 @@
 export function lockScrollLoader() {
-
-    console.log("lockScrollLoader prev");
     const element = document.querySelector(".section_loader");
     if (!element) return;
-
-    console.log("lockScrollLoader");
 
     // Prevent the browser from automatically restoring scroll position
     if ("scrollRestoration" in history) {

@@ -1,11 +1,6 @@
 export function loader() {
-    console.log("loader prev");
-
-
     const element = document.querySelector(".section_loader");
     if (!element) return;
-
-    console.log("loader");
 
     // Prevent the browser from automatically restoring scroll position
     if ("scrollRestoration" in history) {

@@ -13,6 +13,16 @@ import { travelWithUs } from './travel-with-us/travel-with-us.js';
 import { storyGSAP } from './our-story/story-gsap-animations.js';
 import { swiperTrips } from './swiper/swiper-trips.js';
 import { companyGSAP } from './company/company-gsap-animations.js';
+import { menu } from './menu/menu.js';
+import { GSAPTitles } from './gsap/titles.js';
+import { GSAPParallax } from './gsap/parallax.js';
+import { GSAPAnimations } from './gsap/animations.js';
+import { chooseSection } from './homepage/choose-section.js';
+import { map } from './map/map-hover.js';
+
+
+
+
 
 
 loader();
@@ -30,5 +40,14 @@ travelWithUs();
 storyGSAP();
 swiperTrips();
 companyGSAP();
+
+
+
+menu();
+GSAPTitles();
+GSAPParallax();
+GSAPAnimations();
+chooseSection();
+map();
 
 
