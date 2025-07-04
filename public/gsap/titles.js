@@ -80,7 +80,26 @@ export function GSAPTitles() {
     //————————————————————————————————————————————————————————
     //————————————————————————————————————————————————————————
     //————————————————————————————————————————————————————————
+    $("[tracking-anim]").each(function () {
+        console.log("track start");
+        const element = this;
 
+        // Set initial letter-spacing to 0em
+        gsap.set(element, { letterSpacing: "0em" });
+
+        // Animate to 0.2em directly (your original smooth spacing)
+        gsap.to(element, {
+            letterSpacing: "0.2em",
+            ease: "power1.inOut",
+            scrollTrigger: {
+                trigger: element,
+                start: "bottom bottom",
+                end: "bottom top",
+                scrub: true,
+            },
+        });
+        console.log("track end");
+    });
 
     $("[tracking-anim-dream]").each(function () {
         const element = this;
