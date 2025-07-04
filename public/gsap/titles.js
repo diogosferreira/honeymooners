@@ -92,7 +92,7 @@ export function GSAPTitles() {
 
         // ScrollTrigger animation
         gsap.to(element, {
-            letterSpacing: "0.5em",
+            letterSpacing: "0.2em",
             ease: "power1.inOut", // Add ease-in-out effect
             scrollTrigger: {
                 trigger: element,
