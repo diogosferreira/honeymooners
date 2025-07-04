@@ -82,11 +82,6 @@ export function GSAPTitles() {
     //————————————————————————————————————————————————————————
 
     $("[tracking-anim]").each(function () {
-        console.log("titles");
-        console.log("titles");
-        console.log("titles");
-
-
         const element = this;
 
         // Get the original letter-spacing value from the `style` attribute or set a default
@@ -97,7 +92,7 @@ export function GSAPTitles() {
 
         // ScrollTrigger animation
         gsap.to(element, {
-            letterSpacing: "0.2em",
+            letterSpacing: "0.5em",
             ease: "power1.inOut", // Add ease-in-out effect
             scrollTrigger: {
                 trigger: element,
