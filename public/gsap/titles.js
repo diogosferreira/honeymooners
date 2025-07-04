@@ -82,25 +82,27 @@ export function GSAPTitles() {
     //————————————————————————————————————————————————————————
 
     $("[tracking-anim]").each(function () {
+        console.log("track start");
         const element = this;
 
-        // Get the original letter-spacing value from the `style` attribute or set a default
-        const originalTracking = parseFloat($(element).css("letter-spacing")) || 0;
+        // Get the original letter-spacing value
+        const originalTracking = $(element).css("letter-spacing");
 
-        // Ensure the element starts with `letter-spacing: 0em`
+        // Set initial letter-spacing to 0em
         gsap.set(element, { letterSpacing: "0em" });
 
-        // ScrollTrigger animation
+        // Animate to original
         gsap.to(element, {
-            letterSpacing: "0.2em",
-            ease: "power1.inOut", // Add ease-in-out effect
+            letterSpacing: originalTracking,
+            ease: "power1.inOut",
             scrollTrigger: {
                 trigger: element,
-                start: "bottom bottom", // Start animation when top of element hits bottom of viewport
-                end: "bottom top", // End animation when top of element hits the middle of viewport
-                scrub: true, // Smooth scrubbing
+                start: "bottom bottom",
+                end: "bottom top",
+                scrub: true,
             },
         });
+        console.log("track end");
     });
 
     $("[tracking-anim-dream]").each(function () {
