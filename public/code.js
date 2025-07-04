@@ -21,6 +21,9 @@ import { chooseSection } from './homepage/choose-section.js';
 import { map } from './map/map-hover.js';
 
 
+gsap.registerPlugin(ScrollTrigger);
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
     GSAPTitles();

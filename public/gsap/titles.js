@@ -102,7 +102,7 @@ export function GSAPTitles() {
             });
             console.log("track set ------");
         });
-    }, 1000);
+    }, 500);
 
     $("[tracking-anim-dream]").each(function () {
         const element = this;
