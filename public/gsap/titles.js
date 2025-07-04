@@ -83,7 +83,6 @@ export function GSAPTitles() {
 
     $("[tracking-anim]").each(function () {
         console.log("titles");
-        console.log("working");
 
 
         const element = this;
