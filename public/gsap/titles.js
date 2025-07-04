@@ -1,5 +1,5 @@
 export function GSAPTitles() {
-    const element = document.querySelector("[text-split]");[tracking - anim]
+    const element = document.querySelector("[text-split]");
 
     if (!element) return;
 
@@ -82,6 +82,8 @@ export function GSAPTitles() {
     //————————————————————————————————————————————————————————
 
     $("[tracking-anim]").each(function () {
+        console.log("titles");
+        console.log("titles");
         console.log("titles");
 
 
