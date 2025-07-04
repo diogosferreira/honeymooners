@@ -24,6 +24,7 @@ import { map } from './map/map-hover.js';
 
 document.addEventListener("DOMContentLoaded", function () {
     GSAPTitles();
+    console.log("GSAPTitles();");
 });
 
 
