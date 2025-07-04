@@ -100,9 +100,9 @@ export function GSAPTitles() {
                     scrub: true,
                 },
             });
-            console.log("track set end");
+            console.log("track set ------");
         });
-    }, 200);
+    }, 1000);
 
     $("[tracking-anim-dream]").each(function () {
         const element = this;
