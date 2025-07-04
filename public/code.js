@@ -22,7 +22,9 @@ import { map } from './map/map-hover.js';
 
 
 
-
+document.addEventListener("DOMContentLoaded", function () {
+    GSAPTitles();
+});
 
 
 loader();
@@ -41,7 +43,7 @@ storyGSAP();
 swiperTrips();
 companyGSAP();
 menu();
-GSAPTitles();
+
 GSAPParallax();
 GSAPAnimations();
 chooseSection();
