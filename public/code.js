@@ -27,7 +27,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 document.addEventListener("DOMContentLoaded", function () {
     GSAPTitles();
-    console.log("GSAPTitles();");
 });
 
 

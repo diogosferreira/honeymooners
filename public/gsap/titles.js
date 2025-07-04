@@ -83,7 +83,6 @@ export function GSAPTitles() {
 
     setTimeout(() => {
         $("[tracking-anim]").each(function () {
-            console.log("track set");
             const element = this;
 
             // Set initial letter-spacing to 0em
@@ -100,31 +99,34 @@ export function GSAPTitles() {
                     scrub: true,
                 },
             });
-            console.log("track set ------");
         });
+
+
+
+
+        $("[tracking-anim-dream]").each(function () {
+            const element = this;
+
+            // Get the original letter-spacing value from the `style` attribute or set a default
+            const originalTracking = parseFloat($(element).css("letter-spacing")) || 0;
+
+            // Ensure the element starts with `letter-spacing: 0em`
+            gsap.set(element, { letterSpacing: "0em" });
+
+            // ScrollTrigger animation
+            gsap.to(element, {
+                letterSpacing: "0.2em",
+                ease: "power1.inOut", // Add ease-in-out effect
+                scrollTrigger: {
+                    trigger: element,
+                    start: "bottom bottom", // Start animation when top of element hits bottom of viewport
+                    end: "bottom top", // End animation when top of element hits the middle of viewport
+                    scrub: true, // Smooth scrubbing
+                },
+            });
+        });
+
     }, 500);
-
-    $("[tracking-anim-dream]").each(function () {
-        const element = this;
-
-        // Get the original letter-spacing value from the `style` attribute or set a default
-        const originalTracking = parseFloat($(element).css("letter-spacing")) || 0;
-
-        // Ensure the element starts with `letter-spacing: 0em`
-        gsap.set(element, { letterSpacing: "0em" });
-
-        // ScrollTrigger animation
-        gsap.to(element, {
-            letterSpacing: "0.2em",
-            ease: "power1.inOut", // Add ease-in-out effect
-            scrollTrigger: {
-                trigger: element,
-                start: "bottom bottom", // Start animation when top of element hits bottom of viewport
-                end: "bottom top", // End animation when top of element hits the middle of viewport
-                scrub: true, // Smooth scrubbing
-            },
-        });
-    });
 
     //COLOR CHANGE
     //————————————————————————————————————————————————————————
