@@ -1,5 +1,6 @@
 export function GSAPTitles() {
-    const element = document.querySelector("[text-split]");
+    const element = document.querySelector("[text-split]");[tracking - anim]
+
     if (!element) return;
 
 
@@ -82,6 +83,9 @@ export function GSAPTitles() {
 
     $("[tracking-anim]").each(function () {
         console.log("titles");
+        console.log("working");
+
+
         const element = this;
 
         // Get the original letter-spacing value from the `style` attribute or set a default
