@@ -7,8 +7,10 @@ export function userLocation() {
 
     const path = window.location.pathname;
 
-    const euroRanges = ["até 2000€", "2000–3000€", "3000–5000€", "+5000€"];
-    const euroInternationalRanges = ["up 2000€", "2000–3000€", "3000–5000€", "+5000€"];
+    const euroRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
+    const euroInternationalRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
+
+
 
     const brlRanges = [
         "R$15.000-20.000",
