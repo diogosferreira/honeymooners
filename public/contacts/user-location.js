@@ -3,6 +3,8 @@ export function userLocation() {
     if (!element) return;
 
 
+
+
     const path = window.location.pathname;
 
     const euroRanges = ["até 2000€", "2000–3000€", "3000–5000€", "+5000€"];
@@ -35,6 +37,21 @@ export function userLocation() {
         newValues = fallbackRanges;
         updateOptions(newValues);
     }
+
+
+
+    fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+            const country = data.country_name;
+            console.log("Visitor country:", country);
+
+            if (country === "Ireland") {
+                newValues = euroRanges;
+            } else if (country === "Portugal") {
+                console.log("Olá Portugal!");
+            }
+        });
 
     function updateOptions(values) {
         document
