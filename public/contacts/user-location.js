@@ -44,12 +44,12 @@ export function userLocation() {
         .then(res => res.json())
         .then(data => {
             const country = data.country_name;
-            console.log("Visitor country:", country);
+            //console.log("Visitor country:", country);
 
             if (country === "Ireland") {
                 newValues = euroRanges;
             } else if (country === "Portugal") {
-                console.log("Olá Portugal!");
+                //console.log("Olá Portugal!");
             }
         });
 
