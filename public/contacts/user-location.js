@@ -7,6 +7,7 @@ export function userLocation() {
 
     const path = window.location.pathname;
 
+    const ptRanges = ["até 2000€", "2000–3000€", "3000–5000€", "+5000€"];
     const euroRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
     const euroInternationalRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
 
@@ -29,7 +30,7 @@ export function userLocation() {
     let newValues = fallbackRanges;
 
     if (path.startsWith("/pt")) {
-        newValues = euroRanges;
+        newValues = ptRanges;
         updateOptions(newValues);
     } else if (path.startsWith("/br")) {
         newValues = brlRanges;
@@ -48,12 +49,12 @@ export function userLocation() {
         .then(res => res.json())
         .then(data => {
             const country = data.country_name;
-            //console.log("Visitor country:", country);
+
 
             if (country === "Ireland") {
                 newValues = euroInternationalRanges;
             } else if (country === "Portugal") {
-                //console.log("Olá Portugal!");
+
             }
         });
 
