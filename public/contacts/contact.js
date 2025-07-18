@@ -303,46 +303,42 @@ export function contact() {
     //————————————————————————————————————————————————————————
     //————————————————————————————————————————————————————————
 
+    $(document).on('click', '.form-submit-trigger', function () {
+        const pathname = window.location.pathname;
+        const departureDate = $("input[name='data_de_partida_aproximada']").val().trim();
+        //console.log("Departure Date:", departureDate);
 
-    if (window.location.hostname.includes('honeymooners-staging.webflow.io')) {
+        let isDateWithin330 = false;
 
+        if (departureDate) {
+            const departure = moment(departureDate, "DD/MM/YYYY");
+            const today = moment().startOf("day");
+            const daysDiff = departure.diff(today, 'days');
 
-        $(document).on('click', '.form-submit-trigger', function () {
-            const pathname = window.location.pathname;
-            const departureDate = $("input[name='data_de_partida_aproximada']").val().trim();
-            //console.log("Departure Date:", departureDate);
+            console.log("Days from today:", daysDiff);
 
-            let isDateWithin330 = false;
+            isDateWithin330 = daysDiff <= 330;
+        }
 
-            if (departureDate) {
-                const departure = moment(departureDate, "DD/MM/YYYY");
-                const today = moment().startOf("day");
-                const daysDiff = departure.diff(today, 'days');
+        //console.log("Is departure within 330 days?", isDateWithin330);
 
-                console.log("Days from today:", daysDiff);
+        const $radios = $("input[name='orcamento-minimo-adulto']");
+        const $checked = $radios.filter(":checked");
+        const index = $radios.index($checked);
 
-                isDateWithin330 = daysDiff <= 330;
+        //console.log("Selected index:", index, "Total radios:", $radios.length);
+
+        const isLastTwo = index >= ($radios.length - 2);
+
+        //console.log("Is in last two options:", isLastTwo);
+
+        // Your combined condition
+        if (isDateWithin330 && isLastTwo) {
+            if (!pathname.startsWith('/pt') && !pathname.startsWith('/br') && !pathname.startsWith('/es')) {
+                window.open('https://info.honeymooners.travel/meetings/yourjourney/beginshere', '_blank');
             }
+        }
+    });
 
-            //console.log("Is departure within 330 days?", isDateWithin330);
-
-            const $radios = $("input[name='orcamento-minimo-adulto']");
-            const $checked = $radios.filter(":checked");
-            const index = $radios.index($checked);
-
-            //console.log("Selected index:", index, "Total radios:", $radios.length);
-
-            const isLastTwo = index >= ($radios.length - 2);
-
-            //console.log("Is in last two options:", isLastTwo);
-
-            // Your combined condition
-            if (isDateWithin330 && isLastTwo) {
-                if (!pathname.startsWith('/pt') && !pathname.startsWith('/br') && !pathname.startsWith('/es')) {
-                    window.open('https://info.honeymooners.travel/meetings/yourjourney/beginshere', '_blank');
-                }
-            }
-        });
-    }
 
 }
