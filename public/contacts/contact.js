@@ -306,7 +306,7 @@ export function contact() {
     $(document).on('click', '.form-submit-trigger', function () {
         const pathname = window.location.pathname;
         const departureDate = $("input[name='data_de_partida_aproximada']").val().trim();
-        //console.log("Departure Date:", departureDate);
+        console.log("Departure Date:", departureDate);
 
         let isDateWithin330 = false;
 
@@ -320,17 +320,17 @@ export function contact() {
             isDateWithin330 = daysDiff <= 330;
         }
 
-        //console.log("Is departure within 330 days?", isDateWithin330);
+        console.log("Is departure within 330 days?", isDateWithin330);
 
         const $radios = $("input[name='orcamento-minimo-adulto']");
         const $checked = $radios.filter(":checked");
         const index = $radios.index($checked);
 
-        //console.log("Selected index:", index, "Total radios:", $radios.length);
+        console.log("Selected index:", index, "Total radios:", $radios.length);
 
         const isLastTwo = index >= ($radios.length - 2);
 
-        //console.log("Is in last two options:", isLastTwo);
+        console.log("Is in last two options:", isLastTwo);
 
         // Your combined condition
         if (isDateWithin330 && isLastTwo) {
