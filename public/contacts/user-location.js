@@ -58,18 +58,25 @@ export function userLocation() {
             // ✅ Specific country rules
             if (country === "Ireland") {
                 newValues = euroInternationalRanges;
+                updateOptions(newValues);
             } else if (country === "Portugal") {
                 newValues = ptRanges;
+                updateOptions(newValues);
             } else if (country === "Brazil") {
                 newValues = brlRanges;
+                updateOptions(newValues);
             } else if (country === "Mexico") {
                 newValues = fallbackRanges;
+                updateOptions(newValues);
             } else if (country === "United States") {
                 newValues = fallbackRanges;
+                updateOptions(newValues);
             } else if (country === "Canada") {
                 newValues = CADRanges;
+                updateOptions(newValues);
             } else if (country === "United Kingdom") {
                 newValues = ukRanges;
+                updateOptions(newValues);
             }
 
             // General region rules
@@ -78,9 +85,11 @@ export function userLocation() {
                 ["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "RO", "SK", "SI", "ES", "SE", "NO", "IS", "LI", "CH"].includes(countryCode)
             ) {
                 newValues = euroInternationalRanges;
+                updateOptions(newValues);
             } else {
                 // Rest of the world → USD
                 newValues = fallbackRanges;
+                updateOptions(newValues);
             }
 
             //console.log("Selected ranges:", newValues);
