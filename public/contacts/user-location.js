@@ -53,7 +53,7 @@ export function userLocation() {
             const countryCode = data.country_code;
             let newValues;
 
-            //console.log("User country:", country);
+            console.log("User country:", country);
 
             // ✅ Specific country rules
             if (country === "Ireland") {
