@@ -303,6 +303,7 @@ export function contact() {
     //————————————————————————————————————————————————————————
     //————————————————————————————————————————————————————————
 
+    /*
     $(document).on('click', '.form-submit-trigger', function () {
         const pathname = window.location.pathname;
         const departureDate = $("input[name='data_de_partida_aproximada']").val().trim();
@@ -339,6 +340,7 @@ export function contact() {
             }
         }
     });
+    */
 
 
 }
