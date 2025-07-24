@@ -7,15 +7,25 @@ export function userLocation() {
 
     const path = window.location.pathname;
 
-    const ptRanges = ["até 2000€", "2000–3000€", "3000–5000€", "+5000€"];
+
+
+    //const ptRanges = ["até 2000€", "2000–3000€", "3000–5000€", "+5000€"];
+    const ptRanges = ["1500-3000€", "3000–4000€", "4000–5000€", "+5000€"];
     const euroRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
     const ukRanges = ["2000–3000£", "3000–5000£", "5000–10000£", "+10000£"];
     const euroInternationalRanges = ["2000–3000€", "3000–5000€", "5000–10000€", "+10000€"];
 
-    const brlRanges = [
+    /*const brlRanges = [
         "R$15.000-20.000",
         "R$20.000–30.000",
         "R$30.000–50.000",
+        "+R$50.000",
+    ];*/
+
+    const brlRanges = [
+        "R$20.000-30.000",
+        "R$30.000–40.000",
+        "R$40.000–50.000",
         "+R$50.000",
     ];
     const esRanges = [
