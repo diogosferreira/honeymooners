@@ -55,12 +55,12 @@ export function contact() {
             }
         );
 
-        // Inicializar campo de chegada (intervalo de datas)
         $("[ms-code-input='date-range']").daterangepicker(
             {
                 autoApply: true,
                 autoUpdateInput: false,
                 showDropdowns: true,
+                singleCalendar: true, // <- esta linha faz mostrar apenas um calendário
                 locale: { format: "DD/MM/YYYY" },
                 minDate: today.clone().add(1, "day"),
                 startDate: today.clone().add(1, "day"),
