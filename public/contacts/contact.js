@@ -6,54 +6,129 @@ export function contact() {
     //
     $(".radio-button-border").removeClass("is-active");
 
-    const today = moment().startOf("day");
 
-    $("[ms-code-input='date']").each(function () {
-        const $input = $(this);
-        const type = $input.attr("data-date-type");
 
-        $input.daterangepicker(
+
+    if (window.location.hostname === "honeymooners-staging.webflow.io") {
+        console.log("Estás no staging.");
+        // Coloca aqui o código que deve correr apenas em staging
+
+        console.log("aqui");
+
+
+        const today = moment().startOf("day");
+
+        const departureInput = $("[data-date-type='departure']");
+        let selectedDepartureDate = null;
+
+        // Inicializar campo de partida (data única)
+        departureInput.daterangepicker(
             {
                 singleDatePicker: true,
                 showDropdowns: true,
                 autoApply: true,
                 autoUpdateInput: false,
-                minDate: type === "departure" ? today : false,
+                minDate: today,
                 locale: { format: "DD/MM/YYYY" },
             },
             function (chosen_date) {
+                selectedDepartureDate = chosen_date.clone().startOf("day");
                 const formatted = chosen_date.format("DD/MM/YYYY");
                 const isoFormatted = chosen_date.format("YYYY-MM-DD");
 
                 this.element.val(formatted);
+                $(`[data-date-submit='departure']`).val(isoFormatted);
 
-                const selectedType = this.element.attr("data-date-type");
-                if (selectedType) {
-                    $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
-                }
+                // Resetar chegada após escolher partida
+                const arrivalInput = $("[data-date-type='arrival']");
+                arrivalInput.val("");
+                $("[data-date-submit='arrival']").val("");
 
-                if (selectedType === "departure") {
-                    const arrivalInput = $("[data-date-type='arrival']");
-                    const arrivalPicker = arrivalInput.data("daterangepicker");
-
-                    // Atualiza o minDate do calendário de chegada
-                    arrivalPicker.minDate = chosen_date.clone().add(1, "day");
+                // Atualiza intervalo da chegada
+                const arrivalPicker = arrivalInput.data("daterangepicker");
+                if (arrivalPicker) {
+                    arrivalPicker.setStartDate(selectedDepartureDate.clone().add(1, "day"));
+                    arrivalPicker.setEndDate(selectedDepartureDate.clone().add(2, "day"));
+                    arrivalPicker.minDate = selectedDepartureDate.clone().add(1, "day");
                     arrivalPicker.updateView();
-
-                    // Verifica se já foi selecionada uma data de chegada
-                    const currentArrival = arrivalInput.val();
-                    if (currentArrival) {
-                        const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
-                        if (!arrivalMoment.isAfter(chosen_date)) {
-                            // Limpa se a chegada for no mesmo dia ou anterior à nova partida
-                            arrivalInput.val("");
-                            $("[data-date-submit='arrival']").val("");
-                        }
-                    }
                 }
             }
         );
-    });
+
+        // Inicializar campo de chegada (intervalo de datas)
+        $("[ms-code-input='date-range']").daterangepicker(
+            {
+                autoApply: true,
+                autoUpdateInput: false,
+                showDropdowns: true,
+                locale: { format: "DD/MM/YYYY" },
+                minDate: today.clone().add(1, "day"),
+                startDate: today.clone().add(1, "day"),
+                endDate: today.clone().add(2, "day"),
+            },
+            function (start, end) {
+                const formatted = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
+                const isoFormatted = `${start.format("YYYY-MM-DD")} to ${end.format("YYYY-MM-DD")}`;
+
+                this.element.val(formatted);
+                $(`[data-date-submit='arrival']`).val(isoFormatted);
+            }
+        );
+    } else {
+
+
+        const today = moment().startOf("day");
+
+        $("[ms-code-input='date']").each(function () {
+            const $input = $(this);
+            const type = $input.attr("data-date-type");
+
+            $input.daterangepicker(
+                {
+                    singleDatePicker: true,
+                    showDropdowns: true,
+                    autoApply: true,
+                    autoUpdateInput: false,
+                    minDate: type === "departure" ? today : false,
+                    locale: { format: "DD/MM/YYYY" },
+                },
+                function (chosen_date) {
+                    const formatted = chosen_date.format("DD/MM/YYYY");
+                    const isoFormatted = chosen_date.format("YYYY-MM-DD");
+
+                    this.element.val(formatted);
+
+                    const selectedType = this.element.attr("data-date-type");
+                    if (selectedType) {
+                        $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
+                    }
+
+                    if (selectedType === "departure") {
+                        const arrivalInput = $("[data-date-type='arrival']");
+                        const arrivalPicker = arrivalInput.data("daterangepicker");
+
+                        // Atualiza o minDate do calendário de chegada
+                        arrivalPicker.minDate = chosen_date.clone().add(1, "day");
+                        arrivalPicker.updateView();
+
+                        // Verifica se já foi selecionada uma data de chegada
+                        const currentArrival = arrivalInput.val();
+                        if (currentArrival) {
+                            const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
+                            if (!arrivalMoment.isAfter(chosen_date)) {
+                                // Limpa se a chegada for no mesmo dia ou anterior à nova partida
+                                arrivalInput.val("");
+                                $("[data-date-submit='arrival']").val("");
+                            }
+                        }
+                    }
+                }
+            );
+        });
+
+    }
+
+
 
 
 
