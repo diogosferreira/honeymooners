@@ -62,20 +62,11 @@ export function contact() {
                 autoApply: true,
                 autoUpdateInput: false,
                 showDropdowns: true,
+                singleCalendar: true, // <- esta linha faz mostrar apenas um calendário
                 locale: { format: "DD/MM/YYYY" },
                 minDate: today.clone().add(1, "day"),
                 startDate: today.clone().add(1, "day"),
                 endDate: today.clone().add(2, "day"),
-                singleDatePicker: false,
-                showCustomRangeLabel: false,
-                linkedCalendars: false, // Optional: disables syncing between calendars
-                drops: "down",          // Optional: controls position
-                opens: "center",        // Optional: controls alignment
-                isInvalidDate: () => false,
-                // 👇 this is the key to show only one calendar
-                alwaysShowCalendars: true,
-                // 👇 undocumented but works
-                maxSpan: { days: 365 }, // This can be set if you want a limit
             },
             function (start, end) {
                 const formatted = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
