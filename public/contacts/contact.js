@@ -71,7 +71,9 @@ export function contact() {
                 autoApply: true,
                 autoUpdateInput: false,
                 showDropdowns: true,
-                singleCalendar: true, // <- esta linha faz mostrar apenas um calendário
+                singleDatePicker: false,
+                linkedCalendars: false,
+                alwaysShowCalendars: true,
                 locale: { format: "DD/MM/YYYY" },
                 minDate: today.clone().add(1, "day"),
                 startDate: today.clone().add(1, "day"),
