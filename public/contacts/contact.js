@@ -66,6 +66,8 @@ export function contact() {
         });
 
 
+        const today = moment();
+
         $("[ms-code-input='date-range']").daterangepicker(
             {
                 autoApply: true,
@@ -73,9 +75,8 @@ export function contact() {
                 showDropdowns: true,
                 singleDatePicker: false,
                 linkedCalendars: false,
-                alwaysShowCalendars: true,
                 locale: { format: "DD/MM/YYYY" },
-                minDate: today.clone().add(1, "day"),
+                minDate: today.clone(), // allow going back at least to today
                 startDate: today.clone().add(1, "day"),
                 endDate: today.clone().add(2, "day"),
             },
