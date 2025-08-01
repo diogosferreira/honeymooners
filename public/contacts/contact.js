@@ -76,8 +76,8 @@ export function contact() {
                 alwaysShowCalendars: true,
                 locale: { format: "DD/MM/YYYY" },
                 minDate: today.clone().add(1, "day"),
-                startDate: today.clone().add(1, "day"),
-                endDate: today.clone().add(2, "day"),
+                //startDate: today.clone().add(1, "day"),
+                //endDate: today.clone().add(2, "day"),
             },
             function (start, end) {
                 const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
