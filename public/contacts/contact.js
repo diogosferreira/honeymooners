@@ -80,11 +80,16 @@ export function contact() {
                 endDate: today.clone().add(2, "day"),
             },
             function (start, end) {
-                const formatted = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
-                const isoFormatted = `${start.format("YYYY-MM-DD")} to ${end.format("YYYY-MM-DD")}`;
+                const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
 
-                this.element.val(formatted);
-                $(`[data-date-submit='arrival']`).val(isoFormatted);
+                // Update combined field display
+                this.element.val(formattedRange);
+
+                // Update departure field
+                $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
+
+                // Update arrival field
+                $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
             }
         );
     } else {
