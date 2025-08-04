@@ -66,6 +66,35 @@ export function contact() {
         });
 
 
+
+        $("[ms-code-input='date-range']").daterangepicker(
+            {
+                autoApply: true,
+                autoUpdateInput: false,
+                showDropdowns: true,
+                singleDatePicker: false,
+                linkedCalendars: false,
+                alwaysShowCalendars: true,
+                locale: { format: "DD/MM/YYYY" },
+                minDate: today.clone().add(1, "day"),
+            },
+            function (start, end) {
+                const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
+
+                // Update combined display field
+                this.element.val(formattedRange);
+
+                // Update visible display fields
+                $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
+                $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
+
+                // Update hidden submission date fields
+                $("[data-date-submit='departure']").val(start.format("YYYY-MM-DD"));
+                $("[data-date-submit='arrival']").val(end.format("YYYY-MM-DD"));
+            }
+        );
+
+        /*
         $("[ms-code-input='date-range']").daterangepicker(
             {
                 autoApply: true,
@@ -91,7 +120,9 @@ export function contact() {
                 // Update arrival field
                 $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
             }
-        );
+        );*/
+
+
     } else {
 
 
