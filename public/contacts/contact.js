@@ -9,173 +9,174 @@ export function contact() {
 
 
 
-    if (window.location.hostname === "honeymooners-staging.webflow.io") {
-        console.log("Estás no staging.");
+    /* if (window.location.hostname === "honeymooners-staging.webflow.io") {
+         console.log("Estás no staging.");
+ */
+
+
+    const today = moment().startOf("day");
 
 
 
-        const today = moment().startOf("day");
+    $("[ms-code-input='date']").each(function () {
+        const $input = $(this);
+        const type = $input.attr("data-date-type");
 
+        $input.daterangepicker(
+            {
+                singleDatePicker: true,
+                showDropdowns: true,
+                autoApply: true,
+                autoUpdateInput: false,
+                minDate: type === "departure" ? today : false,
+                locale: { format: "DD/MM/YYYY" },
+            },
+            function (chosen_date) {
+                const formatted = chosen_date.format("DD/MM/YYYY");
+                const isoFormatted = chosen_date.format("YYYY-MM-DD");
 
+                this.element.val(formatted);
 
-        $("[ms-code-input='date']").each(function () {
-            const $input = $(this);
-            const type = $input.attr("data-date-type");
+                const selectedType = this.element.attr("data-date-type");
+                if (selectedType) {
+                    $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
+                }
 
-            $input.daterangepicker(
-                {
-                    singleDatePicker: true,
-                    showDropdowns: true,
-                    autoApply: true,
-                    autoUpdateInput: false,
-                    minDate: type === "departure" ? today : false,
-                    locale: { format: "DD/MM/YYYY" },
-                },
-                function (chosen_date) {
-                    const formatted = chosen_date.format("DD/MM/YYYY");
-                    const isoFormatted = chosen_date.format("YYYY-MM-DD");
+                if (selectedType === "departure") {
+                    const arrivalInput = $("[data-date-type='arrival']");
+                    const arrivalPicker = arrivalInput.data("daterangepicker");
 
-                    this.element.val(formatted);
+                    // Atualiza o minDate do calendário de chegada
+                    arrivalPicker.minDate = chosen_date.clone().add(1, "day");
+                    arrivalPicker.updateView();
 
-                    const selectedType = this.element.attr("data-date-type");
-                    if (selectedType) {
-                        $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
-                    }
-
-                    if (selectedType === "departure") {
-                        const arrivalInput = $("[data-date-type='arrival']");
-                        const arrivalPicker = arrivalInput.data("daterangepicker");
-
-                        // Atualiza o minDate do calendário de chegada
-                        arrivalPicker.minDate = chosen_date.clone().add(1, "day");
-                        arrivalPicker.updateView();
-
-                        // Verifica se já foi selecionada uma data de chegada
-                        const currentArrival = arrivalInput.val();
-                        if (currentArrival) {
-                            const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
-                            if (!arrivalMoment.isAfter(chosen_date)) {
-                                // Limpa se a chegada for no mesmo dia ou anterior à nova partida
-                                arrivalInput.val("");
-                                $("[data-date-submit='arrival']").val("");
-                            }
+                    // Verifica se já foi selecionada uma data de chegada
+                    const currentArrival = arrivalInput.val();
+                    if (currentArrival) {
+                        const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
+                        if (!arrivalMoment.isAfter(chosen_date)) {
+                            // Limpa se a chegada for no mesmo dia ou anterior à nova partida
+                            arrivalInput.val("");
+                            $("[data-date-submit='arrival']").val("");
                         }
                     }
                 }
-            );
-        });
-
-
-
-        $("[ms-code-input='date-range']").daterangepicker(
-            {
-                autoApply: true,
-                autoUpdateInput: false,
-                showDropdowns: true,
-                singleDatePicker: false,
-                linkedCalendars: false,
-                alwaysShowCalendars: true,
-                locale: { format: "DD/MM/YYYY" },
-                minDate: today.clone().add(1, "day"),
-            },
-            function (start, end) {
-                const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
-
-                // Update combined display field
-                this.element.val(formattedRange);
-
-                // Update visible display fields
-                $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
-                $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
-
-                // Update hidden submission date fields
-                $("[data-date-submit='departure']").val(start.format("YYYY-MM-DD"));
-                $("[data-date-submit='arrival']").val(end.format("YYYY-MM-DD"));
             }
         );
+    });
 
-        /*
-        $("[ms-code-input='date-range']").daterangepicker(
+
+
+    $("[ms-code-input='date-range']").daterangepicker(
+        {
+            autoApply: true,
+            autoUpdateInput: false,
+            showDropdowns: true,
+            singleDatePicker: false,
+            linkedCalendars: false,
+            alwaysShowCalendars: true,
+            locale: { format: "DD/MM/YYYY" },
+            minDate: today.clone().add(1, "day"),
+        },
+        function (start, end) {
+            const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
+
+            // Update combined display field
+            this.element.val(formattedRange);
+
+            // Update visible display fields
+            $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
+            $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
+
+            // Update hidden submission date fields
+            $("[data-date-submit='departure']").val(start.format("YYYY-MM-DD"));
+            $("[data-date-submit='arrival']").val(end.format("YYYY-MM-DD"));
+        }
+    );
+
+    /*
+    $("[ms-code-input='date-range']").daterangepicker(
+        {
+            autoApply: true,
+            autoUpdateInput: false,
+            showDropdowns: true,
+            singleDatePicker: false,
+            linkedCalendars: false,
+            alwaysShowCalendars: true,
+            locale: { format: "DD/MM/YYYY" },
+            minDate: today.clone().add(1, "day"),
+            //startDate: today.clone().add(1, "day"),
+            //endDate: today.clone().add(2, "day"),
+        },
+        function (start, end) {
+            const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
+
+            // Update combined field display
+            this.element.val(formattedRange);
+
+            // Update departure field
+            $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
+
+            // Update arrival field
+            $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
+        }
+    );*/
+
+    /*
+
+} else {
+
+
+    const today = moment().startOf("day");
+
+    $("[ms-code-input='date']").each(function () {
+        const $input = $(this);
+        const type = $input.attr("data-date-type");
+
+        $input.daterangepicker(
             {
+                singleDatePicker: true,
+                showDropdowns: true,
                 autoApply: true,
                 autoUpdateInput: false,
-                showDropdowns: true,
-                singleDatePicker: false,
-                linkedCalendars: false,
-                alwaysShowCalendars: true,
+                minDate: type === "departure" ? today : false,
                 locale: { format: "DD/MM/YYYY" },
-                minDate: today.clone().add(1, "day"),
-                //startDate: today.clone().add(1, "day"),
-                //endDate: today.clone().add(2, "day"),
             },
-            function (start, end) {
-                const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
+            function (chosen_date) {
+                const formatted = chosen_date.format("DD/MM/YYYY");
+                const isoFormatted = chosen_date.format("YYYY-MM-DD");
 
-                // Update combined field display
-                this.element.val(formattedRange);
+                this.element.val(formatted);
 
-                // Update departure field
-                $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
+                const selectedType = this.element.attr("data-date-type");
+                if (selectedType) {
+                    $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
+                }
 
-                // Update arrival field
-                $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
-            }
-        );*/
+                if (selectedType === "departure") {
+                    const arrivalInput = $("[data-date-type='arrival']");
+                    const arrivalPicker = arrivalInput.data("daterangepicker");
 
+                    // Atualiza o minDate do calendário de chegada
+                    arrivalPicker.minDate = chosen_date.clone().add(1, "day");
+                    arrivalPicker.updateView();
 
-    } else {
-
-
-        const today = moment().startOf("day");
-
-        $("[ms-code-input='date']").each(function () {
-            const $input = $(this);
-            const type = $input.attr("data-date-type");
-
-            $input.daterangepicker(
-                {
-                    singleDatePicker: true,
-                    showDropdowns: true,
-                    autoApply: true,
-                    autoUpdateInput: false,
-                    minDate: type === "departure" ? today : false,
-                    locale: { format: "DD/MM/YYYY" },
-                },
-                function (chosen_date) {
-                    const formatted = chosen_date.format("DD/MM/YYYY");
-                    const isoFormatted = chosen_date.format("YYYY-MM-DD");
-
-                    this.element.val(formatted);
-
-                    const selectedType = this.element.attr("data-date-type");
-                    if (selectedType) {
-                        $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
-                    }
-
-                    if (selectedType === "departure") {
-                        const arrivalInput = $("[data-date-type='arrival']");
-                        const arrivalPicker = arrivalInput.data("daterangepicker");
-
-                        // Atualiza o minDate do calendário de chegada
-                        arrivalPicker.minDate = chosen_date.clone().add(1, "day");
-                        arrivalPicker.updateView();
-
-                        // Verifica se já foi selecionada uma data de chegada
-                        const currentArrival = arrivalInput.val();
-                        if (currentArrival) {
-                            const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
-                            if (!arrivalMoment.isAfter(chosen_date)) {
-                                // Limpa se a chegada for no mesmo dia ou anterior à nova partida
-                                arrivalInput.val("");
-                                $("[data-date-submit='arrival']").val("");
-                            }
+                    // Verifica se já foi selecionada uma data de chegada
+                    const currentArrival = arrivalInput.val();
+                    if (currentArrival) {
+                        const arrivalMoment = moment(currentArrival, "DD/MM/YYYY");
+                        if (!arrivalMoment.isAfter(chosen_date)) {
+                            // Limpa se a chegada for no mesmo dia ou anterior à nova partida
+                            arrivalInput.val("");
+                            $("[data-date-submit='arrival']").val("");
                         }
                     }
                 }
-            );
-        });
+            }
+        );
+    });
 
-    }
+}*/
 
 
 
@@ -432,31 +433,31 @@ export function contact() {
         const pathname = window.location.pathname;
         const departureDate = $("input[name='data_de_partida_aproximada']").val().trim();
         console.log("Departure Date:", departureDate);
-
+ 
         let isDateWithin330 = false;
-
+ 
         if (departureDate) {
             const departure = moment(departureDate, "DD/MM/YYYY");
             const today = moment().startOf("day");
             const daysDiff = departure.diff(today, 'days');
-
+ 
             console.log("Days from today:", daysDiff);
-
+ 
             isDateWithin330 = daysDiff <= 330;
         }
-
+ 
         console.log("Is departure within 330 days?", isDateWithin330);
-
+ 
         const $radios = $("input[name='orcamento-minimo-adulto']");
         const $checked = $radios.filter(":checked");
         const index = $radios.index($checked);
-
+ 
         console.log("Selected index:", index, "Total radios:", $radios.length);
-
+ 
         const isLastTwo = index >= ($radios.length - 2);
-
+ 
         console.log("Is in last two options:", isLastTwo);
-
+ 
         // Your combined condition
         if (isDateWithin330 && isLastTwo) {
             if (!pathname.startsWith('/pt') && !pathname.startsWith('/br') && !pathname.startsWith('/es')) {
