@@ -3,15 +3,22 @@ export function contact() {
     if (!element) return;
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     //
     $(".radio-button-border").removeClass("is-active");
 
-
-
-
-    /* if (window.location.hostname === "honeymooners-staging.webflow.io") {
-         console.log("Estás no staging.");
- */
 
 
     const today = moment().startOf("day");
@@ -466,6 +473,127 @@ export function contact() {
         }
     });
     */
+
+
+    // CUSTOM LINK - PRESELECTED
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+
+
+    // Only run if URL contains "honeymooners-staging"
+    if (!location.hostname.includes("honeymooners-staging")) {
+
+
+
+        // DESTINATION: preselect from sessionStorage and then CLEAR it, with debug logs
+        (function () {
+            const KEY = "hm_trip";
+            const storedRaw = sessionStorage.getItem(KEY);
+            console.log("[DESTINATION] Stored raw value in sessionStorage:", storedRaw);
+
+            const stored = (storedRaw || "").toLowerCase();
+            sessionStorage.removeItem(KEY); // clear old value immediately
+            console.log("[DESTINATION] Cleared old value from sessionStorage");
+
+            if (!stored || !/^(honeymoon|trip)$/.test(stored)) {
+                console.warn("[DESTINATION] No valid stored value, aborting.");
+                return;
+            }
+
+            // Detect locale
+            const isES = location.pathname.startsWith("/es/");
+            const isPT = location.pathname.startsWith("/pt/") || location.pathname.startsWith("/br/");
+            console.log("[DESTINATION] Locale detected:", isPT ? "PT" : isES ? "ES" : "EN");
+
+            // Build visible label to select
+            const label =
+                stored === "honeymoon"
+                    ? (isES ? "Luna de miel" : isPT ? "Lua de mel" : "Honeymoon")
+                    : (isES ? "Vacaciones" : isPT ? "Férias" : "Trip");
+
+            console.log("[DESTINATION] Canonical value:", stored, "| Target label:", label);
+
+            const norm = (s) => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            const targetNorm = norm(label);
+
+            function tryClickVisible() {
+                const $opts = $(".form-dropdown-link.is-choose");
+                console.log("[DESTINATION] Visible options found:", $opts.length);
+                if (!$opts.length) return false;
+
+                let $match = $();
+                $opts.each(function () {
+                    console.log("[DESTINATION] Checking visible option:", $(this).text().trim());
+                    if (norm($(this).text()) === targetNorm) {
+                        $match = $(this);
+                        return false;
+                    }
+                });
+                if (!$match.length) {
+                    console.warn("[DESTINATION] No matching visible option for:", label);
+                    return false;
+                }
+
+                console.log("[DESTINATION] Clicking visible option:", $match.text().trim());
+                $(".form-dropdown-toggle.is-choose").trigger("click");
+                setTimeout(() => {
+                    $match.trigger("mousedown").trigger("click");
+                    setTimeout(() => $("body").trigger("click"), 30);
+                }, 20);
+                return true;
+            }
+
+            function tryHiddenSelect() {
+                const sel = document.getElementById("Choose-2");
+                console.log("[DESTINATION] Hidden select found:", !!sel);
+                if (!sel) return false;
+
+                let idx = -1;
+                for (let i = 0; i < sel.options.length; i++) {
+                    console.log("[DESTINATION] Checking hidden option:", sel.options[i].text);
+                    if (norm(sel.options[i].text) === targetNorm) { idx = i; break; }
+                }
+                if (idx === -1) {
+                    console.warn("[DESTINATION] No matching hidden select option for:", label);
+                    return false;
+                }
+
+                sel.selectedIndex = idx;
+                sel.dispatchEvent(new Event("input", { bubbles: true }));
+                sel.dispatchEvent(new Event("change", { bubbles: true }));
+                console.log("[DESTINATION] Set hidden select to:", sel.options[idx].text);
+                return true;
+            }
+
+            // Poll until dropdown is ready, then apply
+            const t0 = Date.now();
+            (function tick() {
+                console.log("[DESTINATION] Trying to set option...");
+                if (tryClickVisible()) return;
+                if (tryHiddenSelect()) return;
+                if (Date.now() - t0 < 5000) return void setTimeout(tick, 100);
+
+                // Last resort: set label directly
+                const labelEl = document.querySelector("[trip-value]");
+                if (labelEl) {
+                    labelEl.textContent = label;
+                    console.warn("[DESTINATION] Forced label text to:", label);
+                }
+            })();
+
+
+            setTimeout(() => {
+                $("body").trigger("click");
+
+            }, 500);
+        })();
+
+    }
+
+
+
+
 
 
 }

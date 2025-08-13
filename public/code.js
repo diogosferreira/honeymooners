@@ -20,6 +20,7 @@ import { GSAPParallax } from './gsap/parallax.js';
 import { GSAPAnimations } from './gsap/animations.js';
 import { chooseSection } from './homepage/choose-section.js';
 import { map } from './map/map-hover.js';
+import { customContactLink } from './contacts/custom-contact-link.js';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 loader();
+customContactLink();
 lockScrollLoader();
 swiperTestimonials();
 featureTabs();
