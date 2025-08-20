@@ -9,8 +9,6 @@ export function customContactLink() {
     // Only run if URL contains "honeymooners-staging"
     if (!location.hostname.includes("honeymooners-staging")) {
 
-
-
         /* ORIGIN (ES/PT/EN): store canonical value "honeymoon" | "trip" into sessionStorage */
         (function () {
             const KEY = "hm_trip";
