@@ -477,8 +477,11 @@ export function contact() {
 
 
     // Only run if URL contains "honeymooners-staging"
-    if (!location.hostname.includes("honeymooners-staging")) {
+    if (location.hostname.includes("honeymooners-staging")) {
         console.log("nova");
+
+
+
 
         // DESTINATION: preselect from sessionStorage and then CLEAR it, with debug logs
         (function () {
