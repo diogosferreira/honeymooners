@@ -363,57 +363,66 @@ export function contact() {
             "jsonp"
         );
 
-        //input.addEventListener("change", formatPhoneNumber);
-        //input.addEventListener("keyup", formatPhoneNumber);
 
-        function formatPhoneNumber() {
-            var formattedNumber = iti.getNumber(
-                intlTelInputUtils.numberFormat.NATIONAL
-            );
-            input.value = formattedNumber;
-            //
-            var ddi = "+" + iti.getSelectedCountryData().dialCode;
-            var phone = input.value;
-
-            // Set values to the target inputs
-            $("#ddi").val(ddi);
-            $("#Phone").val(phone);
-            $("#phone_number_ddi").val(ddi + phone);
-        }
-
-        //only allow numbers
-        $("#phone-number-country").on("input", function () {
-            this.value = this.value.replace(/\D/g, "");
-        });
-
-        //—— Initial values
-        //————————————————————————————————————————————————————————
-        //————————————————————————————————————————————————————————
-        //————————————————————————————————————————————————————————
-        setTimeout(function () {
-            var ddi = "+" + iti.getSelectedCountryData().dialCode;
-            var phone = input.value;
-            $("#ddi").val(ddi);
-            $("#Phone").val(phone);
-            $("#phone_number_ddi").val(ddi + phone);
-        }, 2000);
-        // INITIAL END
-        //————————————————————————————————————————————————————————
-        //————————————————————————————————————————————————————————
-        //————————————————————————————————————————————————————————
-
-        var form = $(input).closest("form");
-        form.on("submit", function () {
-            //formatPhoneNumber();
-
-            var ddi = "+" + iti.getSelectedCountryData().dialCode;
-            var phone = input.value;
-
-            $("#ddi").val(ddi);
-            $("#Phone").val(phone);
-            $("#phone_number_ddi").val(ddi + phone);
-        });
     });
+
+
+    // FORM SUBMIT ————————————————————————————————————————————————————————
+    // FORM SUBMIT ————————————————————————————————————————————————————————
+    // FORM SUBMIT ————————————————————————————————————————————————————————
+
+    //input.addEventListener("change", formatPhoneNumber);
+    //input.addEventListener("keyup", formatPhoneNumber);
+
+    function formatPhoneNumber() {
+        var formattedNumber = iti.getNumber(
+            intlTelInputUtils.numberFormat.NATIONAL
+        );
+        input.value = formattedNumber;
+        //
+        var ddi = "+" + iti.getSelectedCountryData().dialCode;
+        var phone = input.value;
+
+        // Set values to the target inputs
+        $("#ddi").val(ddi);
+        $("#Phone").val(phone);
+        $("#phone_number_ddi").val(ddi + phone);
+    }
+
+    //only allow numbers
+    $("#phone-number-country").on("input", function () {
+        this.value = this.value.replace(/\D/g, "");
+    });
+
+    //—— Initial values
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+    setTimeout(function () {
+        var ddi = "+" + iti.getSelectedCountryData().dialCode;
+        var phone = input.value;
+        $("#ddi").val(ddi);
+        $("#Phone").val(phone);
+        $("#phone_number_ddi").val(ddi + phone);
+    }, 2000);
+    // INITIAL END
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+    //————————————————————————————————————————————————————————
+
+    var form = $(input).closest("form");
+    form.on("submit", function () {
+        //formatPhoneNumber();
+
+        var ddi = "+" + iti.getSelectedCountryData().dialCode;
+        var phone = input.value;
+
+        $("#ddi").val(ddi);
+        $("#Phone").val(phone);
+        $("#phone_number_ddi").val(ddi + phone);
+    });
+
+
 
     // AQUI ALTERA
 
@@ -478,10 +487,6 @@ export function contact() {
 
     // Only run if URL contains "honeymooners-staging"
     if (location.hostname.includes("honeymooners-staging")) {
-        console.log("nova");
-
-
-
 
         // DESTINATION: preselect from sessionStorage and then CLEAR it, with debug logs
         (function () {
@@ -528,11 +533,11 @@ export function contact() {
                     }
                 });
                 if (!$match.length) {
-                    console.warn("[DESTINATION] No matching visible option for:", label);
+                    //console.warn("[DESTINATION] No matching visible option for:", label);
                     return false;
                 }
 
-                console.log("[DESTINATION] Clicking visible option:", $match.text().trim());
+                //console.log("[DESTINATION] Clicking visible option:", $match.text().trim());
                 $(".form-dropdown-toggle.is-choose").trigger("click");
                 setTimeout(() => {
                     $match.trigger("mousedown").trigger("click");
@@ -543,30 +548,30 @@ export function contact() {
 
             function tryHiddenSelect() {
                 const sel = document.getElementById("Choose-2");
-                console.log("[DESTINATION] Hidden select found:", !!sel);
+                //console.log("[DESTINATION] Hidden select found:", !!sel);
                 if (!sel) return false;
 
                 let idx = -1;
                 for (let i = 0; i < sel.options.length; i++) {
-                    console.log("[DESTINATION] Checking hidden option:", sel.options[i].text);
+                    //console.log("[DESTINATION] Checking hidden option:", sel.options[i].text);
                     if (norm(sel.options[i].text) === targetNorm) { idx = i; break; }
                 }
                 if (idx === -1) {
-                    console.warn("[DESTINATION] No matching hidden select option for:", label);
+                    //console.warn("[DESTINATION] No matching hidden select option for:", label);
                     return false;
                 }
 
                 sel.selectedIndex = idx;
                 sel.dispatchEvent(new Event("input", { bubbles: true }));
                 sel.dispatchEvent(new Event("change", { bubbles: true }));
-                console.log("[DESTINATION] Set hidden select to:", sel.options[idx].text);
+                //console.log("[DESTINATION] Set hidden select to:", sel.options[idx].text);
                 return true;
             }
 
             // Poll until dropdown is ready, then apply
             const t0 = Date.now();
             (function tick() {
-                console.log("[DESTINATION] Trying to set option...");
+                //console.log("[DESTINATION] Trying to set option...");
                 if (tryClickVisible()) return;
                 if (tryHiddenSelect()) return;
                 if (Date.now() - t0 < 5000) return void setTimeout(tick, 100);
@@ -575,7 +580,7 @@ export function contact() {
                 const labelEl = document.querySelector("[trip-value]");
                 if (labelEl) {
                     labelEl.textContent = label;
-                    console.warn("[DESTINATION] Forced label text to:", label);
+                    //console.warn("[DESTINATION] Forced label text to:", label);
                 }
             })();
 
