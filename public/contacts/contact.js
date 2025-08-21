@@ -7,6 +7,11 @@ export function contact() {
     //
     $(".radio-button-border").removeClass("is-active");
 
+    // REMOVE THE SELECT THE OPTION ON THE SELECT
+    setTimeout(function () {
+        $(".form-dropdown-list-2 .form-dropdown-link").first().remove();
+    }, 500);
+
 
 
     const today = moment().startOf("day");
@@ -513,21 +518,21 @@ export function contact() {
         (function () {
             const KEY = "hm_trip";
             const storedRaw = sessionStorage.getItem(KEY);
-            console.log("[DESTINATION] Stored raw value in sessionStorage:", storedRaw);
+            //console.log("[DESTINATION] Stored raw value in sessionStorage:", storedRaw);
 
             const stored = (storedRaw || "").toLowerCase();
             sessionStorage.removeItem(KEY); // clear old value immediately
             console.log("[DESTINATION] Cleared old value from sessionStorage");
 
             if (!stored || !/^(honeymoon|trip)$/.test(stored)) {
-                console.warn("[DESTINATION] No valid stored value, aborting.");
+                //console.warn("[DESTINATION] No valid stored value, aborting.");
                 return;
             }
 
             // Detect locale
             const isES = location.pathname.startsWith("/es/");
             const isPT = location.pathname.startsWith("/pt/") || location.pathname.startsWith("/br/");
-            console.log("[DESTINATION] Locale detected:", isPT ? "PT" : isES ? "ES" : "EN");
+            //console.log("[DESTINATION] Locale detected:", isPT ? "PT" : isES ? "ES" : "EN");
 
             // Build visible label to select
             const label =
@@ -542,12 +547,12 @@ export function contact() {
 
             function tryClickVisible() {
                 const $opts = $(".form-dropdown-link.is-choose");
-                console.log("[DESTINATION] Visible options found:", $opts.length);
+                //console.log("[DESTINATION] Visible options found:", $opts.length);
                 if (!$opts.length) return false;
 
                 let $match = $();
                 $opts.each(function () {
-                    console.log("[DESTINATION] Checking visible option:", $(this).text().trim());
+                    //console.log("[DESTINATION] Checking visible option:", $(this).text().trim());
                     if (norm($(this).text()) === targetNorm) {
                         $match = $(this);
                         return false;
