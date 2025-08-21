@@ -363,64 +363,65 @@ export function contact() {
             "jsonp"
         );
 
+        //input.addEventListener("change", formatPhoneNumber);
+        //input.addEventListener("keyup", formatPhoneNumber);
 
+        function formatPhoneNumber() {
+            var formattedNumber = iti.getNumber(
+                intlTelInputUtils.numberFormat.NATIONAL
+            );
+            input.value = formattedNumber;
+            //
+            var ddi = "+" + iti.getSelectedCountryData().dialCode;
+            var phone = input.value;
+
+            // Set values to the target inputs
+            $("#ddi").val(ddi);
+            $("#Phone").val(phone);
+            $("#phone_number_ddi").val(ddi + phone);
+        }
+
+        //only allow numbers
+        $("#phone-number-country").on("input", function () {
+            this.value = this.value.replace(/\D/g, "");
+        });
+
+        //—— Initial values
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
+        setTimeout(function () {
+            var ddi = "+" + iti.getSelectedCountryData().dialCode;
+            var phone = input.value;
+            $("#ddi").val(ddi);
+            $("#Phone").val(phone);
+            $("#phone_number_ddi").val(ddi + phone);
+        }, 2000);
+        // INITIAL END
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
+
+        var form = $(input).closest("form");
+        form.on("submit", function () {
+            //formatPhoneNumber();
+
+            var ddi = "+" + iti.getSelectedCountryData().dialCode;
+            var phone = input.value;
+
+            $("#ddi").val(ddi);
+            $("#Phone").val(phone);
+            $("#phone_number_ddi").val(ddi + phone);
+        });
     });
+
 
 
     // FORM SUBMIT ————————————————————————————————————————————————————————
     // FORM SUBMIT ————————————————————————————————————————————————————————
     // FORM SUBMIT ————————————————————————————————————————————————————————
 
-    //input.addEventListener("change", formatPhoneNumber);
-    //input.addEventListener("keyup", formatPhoneNumber);
 
-    function formatPhoneNumber() {
-        var formattedNumber = iti.getNumber(
-            intlTelInputUtils.numberFormat.NATIONAL
-        );
-        input.value = formattedNumber;
-        //
-        var ddi = "+" + iti.getSelectedCountryData().dialCode;
-        var phone = input.value;
-
-        // Set values to the target inputs
-        $("#ddi").val(ddi);
-        $("#Phone").val(phone);
-        $("#phone_number_ddi").val(ddi + phone);
-    }
-
-    //only allow numbers
-    $("#phone-number-country").on("input", function () {
-        this.value = this.value.replace(/\D/g, "");
-    });
-
-    //—— Initial values
-    //————————————————————————————————————————————————————————
-    //————————————————————————————————————————————————————————
-    //————————————————————————————————————————————————————————
-    setTimeout(function () {
-        var ddi = "+" + iti.getSelectedCountryData().dialCode;
-        var phone = input.value;
-        $("#ddi").val(ddi);
-        $("#Phone").val(phone);
-        $("#phone_number_ddi").val(ddi + phone);
-    }, 2000);
-    // INITIAL END
-    //————————————————————————————————————————————————————————
-    //————————————————————————————————————————————————————————
-    //————————————————————————————————————————————————————————
-
-    var form = $(input).closest("form");
-    form.on("submit", function () {
-        //formatPhoneNumber();
-
-        var ddi = "+" + iti.getSelectedCountryData().dialCode;
-        var phone = input.value;
-
-        $("#ddi").val(ddi);
-        $("#Phone").val(phone);
-        $("#phone_number_ddi").val(ddi + phone);
-    });
 
 
 
