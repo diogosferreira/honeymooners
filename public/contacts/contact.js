@@ -20,8 +20,37 @@ export function contact() {
 
 
         setTimeout(function () {
-            $(".form-dropdown-list-2 .form-dropdown-link").first().addClass("is-hidden-option");
-        }, 1000); // give FS time to render
+            function hideFirstInAll() {
+                document.querySelectorAll(".form-dropdown-list-2").forEach(list => {
+                    const first = list.querySelector(".form-dropdown-link");
+                    if (first && !first.classList.contains("is-hidden-option")) {
+                        first.classList.add("is-hidden-option");
+                    }
+                });
+            }
+
+            // 1) correr quando a página carregar
+            document.addEventListener("DOMContentLoaded", () => {
+                // dar tempo ao Finsweet para construir
+                setTimeout(hideFirstInAll, 600);
+            });
+
+            // 2) observar mudanças no DOM (mudança de idioma, re-render do FS, etc.)
+            const mo = new MutationObserver(() => {
+                // pequeno debounce
+                clearTimeout(mo._t);
+                mo._t = setTimeout(hideFirstInAll, 100);
+            });
+            mo.observe(document.body, { childList: true, subtree: true });
+
+            // 3) também quando o dropdown abrir (algumas libs constroem a lista on open)
+            document.addEventListener("click", (e) => {
+                const toggle = e.target.closest(".w-dropdown-toggle");
+                if (toggle) {
+                    setTimeout(hideFirstInAll, 50);
+                }
+            });
+        }, 500); // give FS time to render
 
     }
 
