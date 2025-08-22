@@ -7,17 +7,17 @@ export function contact() {
     //
     $(".radio-button-border").removeClass("is-active");
 
-
-    if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
-        //console.log("dual 2");
-        // REMOVE THE SELECT THE OPTION ON THE SELECT
-        /*setTimeout(function () {
-            //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
-            $(".form-dropdown-list-2 .form-dropdown-link").first().css("height", "0px");
-            $(".form-dropdown-list-2 .form-dropdown-link").first().css("opacity", "0");
-            $(".form-dropdown-list-2 .form-dropdown-link").first().css("padding", "0px");
-        }, 700);*/
-    }
+    /*
+        if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
+            //console.log("dual 2");
+            // REMOVE THE SELECT THE OPTION ON THE SELECT
+            setTimeout(function () {
+                //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
+                $(".form-dropdown-list-2 .form-dropdown-link").first().css("height", "0px");
+                $(".form-dropdown-list-2 .form-dropdown-link").first().css("opacity", "0");
+                $(".form-dropdown-list-2 .form-dropdown-link").first().css("padding", "0px");
+            }, 700);
+        }*/
 
 
 
@@ -418,6 +418,8 @@ export function contact() {
             this.value = this.value.replace(/\D/g, "");
         });
 
+        console.log("em teste");
+
         //—— Initial values
         //————————————————————————————————————————————————————————
         //————————————————————————————————————————————————————————
@@ -436,6 +438,7 @@ export function contact() {
 
         var form = $(input).closest("form");
         form.on("submit", function () {
+            console.log("submit");
             //formatPhoneNumber();
 
             var ddi = "+" + iti.getSelectedCountryData().dialCode;
