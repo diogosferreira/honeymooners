@@ -7,10 +7,15 @@ export function contact() {
     //
     $(".radio-button-border").removeClass("is-active");
 
-    // REMOVE THE SELECT THE OPTION ON THE SELECT
-    /*setTimeout(function () {
-        $(".form-dropdown-list-2 .form-dropdown-link").first().remove();
-    }, 500);*/
+
+    if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
+        console.log("here");
+        // REMOVE THE SELECT THE OPTION ON THE SELECT
+        setTimeout(function () {
+            //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
+            $(".form-dropdown-list-2 .form-dropdown-link").first().css("display", "none");
+        }, 500);
+    }
 
 
 
