@@ -9,11 +9,12 @@ export function contact() {
 
 
     if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
-        console.log("here");
+        //console.log("here");
         // REMOVE THE SELECT THE OPTION ON THE SELECT
         setTimeout(function () {
             //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
-            $(".form-dropdown-list-2 .form-dropdown-link").first().css("display", "none");
+            $(".form-dropdown-list-2 .form-dropdown-link").first().css("height", "0px");
+            $(".form-dropdown-list-2 .form-dropdown-link").first().css("opacity", "0");
         }, 500);
     }
 
@@ -527,7 +528,7 @@ export function contact() {
 
             const stored = (storedRaw || "").toLowerCase();
             sessionStorage.removeItem(KEY); // clear old value immediately
-            console.log("[DESTINATION] Cleared old value from sessionStorage");
+            //console.log("[DESTINATION] Cleared old value from sessionStorage");
 
             if (!stored || !/^(honeymoon|trip)$/.test(stored)) {
                 //console.warn("[DESTINATION] No valid stored value, aborting.");
@@ -545,7 +546,7 @@ export function contact() {
                     ? (isES ? "Luna de miel" : isPT ? "Lua de mel" : "Honeymoon")
                     : (isES ? "Vacaciones" : isPT ? "Férias" : "Trip");
 
-            console.log("[DESTINATION] Canonical value:", stored, "| Target label:", label);
+            //console.log("[DESTINATION] Canonical value:", stored, "| Target label:", label);
 
             const norm = (s) => String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
             const targetNorm = norm(label);
