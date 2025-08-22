@@ -9,7 +9,7 @@ export function contact() {
 
 
     if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
-        console.log("dual");
+        console.log("dual 2");
         // REMOVE THE SELECT THE OPTION ON THE SELECT
         /*setTimeout(function () {
             //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
@@ -19,38 +19,38 @@ export function contact() {
         }, 700);*/
 
 
-        setTimeout(function () {
-            function hideFirstInAll() {
-                document.querySelectorAll(".form-dropdown-list-2").forEach(list => {
-                    const first = list.querySelector(".form-dropdown-link");
-                    if (first && !first.classList.contains("is-hidden-option")) {
-                        first.classList.add("is-hidden-option");
-                    }
-                });
-            }
 
-            // 1) correr quando a página carregar
-            document.addEventListener("DOMContentLoaded", () => {
-                // dar tempo ao Finsweet para construir
-                setTimeout(hideFirstInAll, 600);
-            });
-
-            // 2) observar mudanças no DOM (mudança de idioma, re-render do FS, etc.)
-            const mo = new MutationObserver(() => {
-                // pequeno debounce
-                clearTimeout(mo._t);
-                mo._t = setTimeout(hideFirstInAll, 100);
-            });
-            mo.observe(document.body, { childList: true, subtree: true });
-
-            // 3) também quando o dropdown abrir (algumas libs constroem a lista on open)
-            document.addEventListener("click", (e) => {
-                const toggle = e.target.closest(".w-dropdown-toggle");
-                if (toggle) {
-                    setTimeout(hideFirstInAll, 50);
+        function hideFirstInAll() {
+            document.querySelectorAll(".form-dropdown-list-2").forEach(list => {
+                const first = list.querySelector(".form-dropdown-link");
+                if (first && !first.classList.contains("is-hidden-option")) {
+                    first.classList.add("is-hidden-option");
                 }
             });
-        }, 500); // give FS time to render
+        }
+
+        // 1) correr quando a página carregar
+        document.addEventListener("DOMContentLoaded", () => {
+            // dar tempo ao Finsweet para construir
+            setTimeout(hideFirstInAll, 600);
+        });
+
+        // 2) observar mudanças no DOM (mudança de idioma, re-render do FS, etc.)
+        const mo = new MutationObserver(() => {
+            // pequeno debounce
+            clearTimeout(mo._t);
+            mo._t = setTimeout(hideFirstInAll, 100);
+        });
+        mo.observe(document.body, { childList: true, subtree: true });
+
+        // 3) também quando o dropdown abrir (algumas libs constroem a lista on open)
+        document.addEventListener("click", (e) => {
+            const toggle = e.target.closest(".w-dropdown-toggle");
+            if (toggle) {
+                setTimeout(hideFirstInAll, 50);
+            }
+        });
+
 
     }
 
