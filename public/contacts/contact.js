@@ -15,6 +15,7 @@ export function contact() {
             //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
             $(".form-dropdown-list-2 .form-dropdown-link").first().css("height", "0px");
             $(".form-dropdown-list-2 .form-dropdown-link").first().css("opacity", "0");
+            $(".form-dropdown-list-2 .form-dropdown-link").first().css("padding", "0px");
         }, 700);
     }
 
