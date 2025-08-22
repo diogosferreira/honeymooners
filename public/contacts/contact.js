@@ -8,9 +8,9 @@ export function contact() {
     $(".radio-button-border").removeClass("is-active");
 
     // REMOVE THE SELECT THE OPTION ON THE SELECT
-    setTimeout(function () {
+    /*setTimeout(function () {
         $(".form-dropdown-list-2 .form-dropdown-link").first().remove();
-    }, 500);
+    }, 500);*/
 
 
 
