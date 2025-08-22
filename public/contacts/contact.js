@@ -9,13 +9,13 @@ export function contact() {
 
 
     if (window.location.href.includes("https://honeymooners-staging.webflow.io/")) {
-        //console.log("here");
+        console.log("dual");
         // REMOVE THE SELECT THE OPTION ON THE SELECT
         setTimeout(function () {
             //$(".form-dropdown-list-2 .form-dropdown-link").first().remove();
             $(".form-dropdown-list-2 .form-dropdown-link").first().css("height", "0px");
             $(".form-dropdown-list-2 .form-dropdown-link").first().css("opacity", "0");
-        }, 500);
+        }, 700);
     }
 
 
