@@ -19,39 +19,9 @@ export function contact() {
         }, 700);*/
 
 
-        (function () {
-            function stripPlaceholder(listEl) {
-                const links = listEl.querySelectorAll(".form-dropdown-link.is-choose");
-                if (links.length < 2) return false; // not ready yet
-
-                // Remove the visible placeholder link if it’s first
-                const first = links[0];
-                if (first && /select your trip/i.test(first.textContent.trim())) {
-                    first.remove();
-                }
-
-                // Also remove the native <option> placeholder so FS doesn’t rebuild it later
-                const select = listEl.querySelector("select") ||
-                    listEl.parentElement.querySelector("select");
-                if (select && select.options.length &&
-                    /select your trip/i.test(select.options[0].text)) {
-                    select.remove(0);
-                }
-                return true;
-            }
-
-            // For every FS dropdown list on the page
-            document.querySelectorAll(".form-dropdown-list-2.is-choose").forEach(listEl => {
-                // Try immediately (in case it’s already built)
-                if (stripPlaceholder(listEl)) return;
-
-                // Otherwise, observe until FS finishes building the items
-                const mo = new MutationObserver(() => {
-                    if (stripPlaceholder(listEl)) mo.disconnect();
-                });
-                mo.observe(listEl, { childList: true });
-            });
-        })();
+        setTimeout(function () {
+            $(".form-dropdown-list-2 .form-dropdown-link").first().addClass("is-hidden-option");
+        }, 1000); // give FS time to render
 
     }
 
