@@ -395,7 +395,7 @@ export function contact() {
 
 
         // keep #ddi, #Phone, #phone_number_ddi in sync
-        /*function updateFields(format = "NATIONAL") {
+        function updateFields(format = "NATIONAL") {
             const fmt = window.intlTelInputUtils?.numberFormat?.[format];
             const value = fmt ? iti.getNumber(fmt) : input.value;
             // show formatted number in the visible input (optional)
@@ -411,7 +411,7 @@ export function contact() {
         // live sync while typing / changing country
         input.addEventListener("input", () => updateFields());
         input.addEventListener("blur", () => updateFields("NATIONAL"));
-        input.addEventListener("countrychange", () => updateFields());*/
+        input.addEventListener("countrychange", () => updateFields());
 
         //only allow numbers
         $("#phone-number-country").on("input", function () {
