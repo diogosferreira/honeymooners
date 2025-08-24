@@ -659,6 +659,9 @@ export function contact() {
 
     if (location.hostname === 'honeymooners-staging.webflow.io') {
 
+
+        console.log("fallback - Staging only");
+
         (function initFormDebugLogger() {
             const form = document.querySelector('form#wf-form-Form');
             if (!form) return;
@@ -669,10 +672,18 @@ export function contact() {
 
             function sendLog(payload) {
                 try {
-                    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                    // 1) Tenta sempre sendBeacon (não precisa de CORS e funciona quando a página fecha)
+                    const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=UTF-8' });
                     if (navigator.sendBeacon && navigator.sendBeacon(LOG_ENDPOINT, blob)) return;
-                    fetch(LOG_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true });
-                } catch (e) { }
+
+                    // 2) Fallback: evita preflight (sem headers, no-cors)
+                    fetch(LOG_ENDPOINT, {
+                        method: 'POST',
+                        body: JSON.stringify(payload),     // texto simples
+                        mode: 'no-cors',
+                        keepalive: true
+                    });
+                } catch (e) { /* silenciar */ }
             }
 
             function baseContext(extra = {}) {
