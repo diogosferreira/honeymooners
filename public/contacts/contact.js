@@ -659,39 +659,49 @@ export function contact() {
 
     if (location.hostname === 'honeymooners-staging.webflow.io') {
 
-
-        console.log("fallback - Staging only");
-
-        (function initFormDebugLogger() {
-            const form = document.querySelector('form#wf-form-Form');
-            if (!form) return;
-
-            // COLA AQUI O URL DA TUA APPS SCRIPT *DEPLOYED* (termina em /exec)
+        (function () {
             const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycby6YpFk0GExx05aqe4YiHJeefPCBLxnETbD5eqyTyVBw0xtiYPUI4JVmupA7dJcySl9/exec';
             const LOG_TIMEOUT_MS = 12000;
 
+            function debug(...a) { console.log('[FormDebug]', ...a); }
+            function warn(...a) { console.warn('[FormDebug]', ...a); }
+            function err(...a) { console.error('[FormDebug]', ...a); }
+
+            // —— envio com debug
             function sendLog(payload) {
                 try {
-                    // 1) Tenta sempre sendBeacon (não precisa de CORS e funciona quando a página fecha)
-                    const blob = new Blob([JSON.stringify(payload)], { type: 'text/plain;charset=UTF-8' });
-                    if (navigator.sendBeacon && navigator.sendBeacon(LOG_ENDPOINT, blob)) return;
-
-                    // 2) Fallback: evita preflight (sem headers, no-cors)
-                    fetch(LOG_ENDPOINT, {
-                        method: 'POST',
-                        body: JSON.stringify(payload),     // texto simples
-                        mode: 'no-cors',
-                        keepalive: true
-                    });
-                } catch (e) { /* silenciar */ }
+                    const txt = JSON.stringify(payload);
+                    const blob = new Blob([txt], { type: 'text/plain;charset=UTF-8' });
+                    let beaconOk = false;
+                    if (navigator.sendBeacon) {
+                        beaconOk = navigator.sendBeacon(LOG_ENDPOINT, blob);
+                        debug('sendBeacon ->', beaconOk ? 'queued' : 'rejected', payload.kind || '');
+                        if (beaconOk) return;
+                    } else {
+                        debug('sendBeacon not supported');
+                    }
+                    // fallback sem preflight
+                    debug('fallback fetch no-cors', payload.kind || '');
+                    fetch(LOG_ENDPOINT, { method: 'POST', body: txt, mode: 'no-cors', keepalive: true })
+                        .then(() => debug('fallback fetch completed (opaque response)'))
+                        .catch(e => err('fallback fetch error', e));
+                } catch (e) {
+                    err('sendLog exception', e);
+                }
             }
 
-            function baseContext(extra = {}) {
+            // teste manual no console: hmLogTest()
+            window.hmLogTest = function (extra) {
+                const p = Object.assign({ kind: 'manual_test', ts: new Date().toISOString(), url: location.href }, extra || {});
+                debug('hmLogTest()', p);
+                sendLog(p);
+            };
+
+            function baseContext(form, extra) {
                 const nav = navigator || {};
                 const conn = nav.connection || {};
                 const formData = {};
-                try { new FormData(form).forEach((v, k) => { formData[k] = String(v).slice(0, 500); }); } catch (e) { }
-
+                try { if (form) new FormData(form).forEach((v, k) => { formData[k] = String(v).slice(0, 500); }); } catch (e) { }
                 return Object.assign({
                     ts: new Date().toISOString(),
                     url: location.href,
@@ -699,66 +709,109 @@ export function contact() {
                     ua: nav.userAgent || '',
                     online: nav.onLine,
                     lang: (nav.languages && nav.languages.join(',')) || nav.language || '',
-                    net_effectiveType: conn.effectiveType || '',
-                    net_rtt: conn.rtt || '',
+                    net_effectiveType: (conn && conn.effectiveType) || '',
+                    net_rtt: (conn && conn.rtt) || '',
                     viewport: `${window.innerWidth}x${window.innerHeight}`,
-                    form_validity: form.checkValidity ? form.checkValidity() : 'unknown',
+                    form_validity: form && form.checkValidity ? form.checkValidity() : 'unknown',
                     form_data: formData
-                }, extra);
+                }, extra || {});
             }
 
-            window.addEventListener('error', (ev) => {
-                sendLog(baseContext({ kind: 'js_error', message: ev.message || '', filename: ev.filename || '', lineno: ev.lineno || 0, colno: ev.colno || 0 }));
-            });
-            window.addEventListener('unhandledrejection', (ev) => {
-                sendLog(baseContext({ kind: 'promise_rejection', reason: (ev.reason && (ev.reason.stack || ev.reason.message || String(ev.reason))) || '' }));
-            });
+            function hook(form) {
+                debug('init with form:', form);
+                const successEl = document.querySelector('.w-form-done');
+                const failEl = document.querySelector('.w-form-fail');
 
-            const successEl = document.querySelector('.w-form-done');
-            const failEl = document.querySelector('.w-form-fail');
-
-            function classifyFailure() {
-                if (!navigator.onLine) return 'offline';
-                if (!form.checkValidity()) return 'required_missing';
-                if (failEl && getComputedStyle(failEl).display !== 'none') return 'webflow_fail_block';
-                return 'timeout_or_unknown';
-            }
-
-            form.addEventListener('submit', function () {
-                const start = performance.now();
-                sendLog(baseContext({ kind: 'submit_attempt' }));
-
-                let done = false;
-                function finish(kind, extra = {}) {
-                    if (done) return; done = true;
-                    sendLog(baseContext(Object.assign({ kind, duration_ms: Math.round(performance.now() - start) }, extra)));
+                function classifyFailure() {
+                    if (!navigator.onLine) return 'offline';
+                    if (form && !form.checkValidity()) return 'required_missing';
+                    if (failEl && getComputedStyle(failEl).display !== 'none') return 'webflow_fail_block';
+                    return 'timeout_or_unknown';
                 }
 
-                const successCheck = setInterval(() => {
-                    if (successEl && getComputedStyle(successEl).display !== 'none') {
-                        clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
-                        finish('submit_success');
-                    }
-                }, 200);
-
-                const failCheck = setInterval(() => {
-                    if (failEl && getComputedStyle(failEl).display !== 'none') {
-                        clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
-                        finish('submit_failure', { reason: classifyFailure() });
-                    }
-                }, 200);
-
-                const timeoutId = setTimeout(() => {
-                    clearInterval(successCheck); clearInterval(failCheck);
-                    finish('submit_failure', { reason: classifyFailure() });
-                }, LOG_TIMEOUT_MS);
-            }, true);
-
-            const submitBtn = document.querySelector('.is-contact-form-submit');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', () => {
-                    sendLog(baseContext({ kind: 'submit_click', online: navigator.onLine, will_validate: form.checkValidity ? form.checkValidity() : 'unknown' }));
+                // eventos globais
+                window.addEventListener('error', (ev) => {
+                    sendLog(baseContext(form, { kind: 'js_error', message: ev.message || '', filename: ev.filename || '', lineno: ev.lineno || 0, colno: ev.colno || 0 }));
                 });
+                window.addEventListener('unhandledrejection', (ev) => {
+                    sendLog(baseContext(form, { kind: 'promise_rejection', reason: (ev.reason && (ev.reason.stack || ev.reason.message || String(ev.reason))) || '' }));
+                });
+
+                // clique no submit
+                const submitBtn = document.querySelector('.is-contact-form-submit');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        debug('submit click');
+                        sendLog(baseContext(form, { kind: 'submit_click', will_validate: form.checkValidity ? form.checkValidity() : 'unknown' }));
+                    });
+                } else {
+                    warn('submit button .is-contact-form-submit not found');
+                }
+
+                // submit (captura)
+                form.addEventListener('submit', function () {
+                    debug('submit event fired');
+                    const start = performance.now();
+                    sendLog(baseContext(form, { kind: 'submit_attempt' }));
+
+                    let done = false;
+                    function finish(kind, extra) {
+                        if (done) return; done = true;
+                        const duration_ms = Math.round(performance.now() - start);
+                        debug('finish', kind, extra || {}, 'in', duration_ms, 'ms');
+                        sendLog(baseContext(form, Object.assign({ kind, duration_ms }, extra || {})));
+                    }
+
+                    const successCheck = setInterval(() => {
+                        if (successEl && getComputedStyle(successEl).display !== 'none') {
+                            clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
+                            finish('submit_success');
+                        }
+                    }, 200);
+
+                    const failCheck = setInterval(() => {
+                        if (failEl && getComputedStyle(failEl).display !== 'none') {
+                            clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
+                            finish('submit_failure', { reason: classifyFailure() });
+                        }
+                    }, 200);
+
+                    const timeoutId = setTimeout(() => {
+                        clearInterval(successCheck); clearInterval(failCheck);
+                        finish('submit_failure', { reason: classifyFailure() });
+                    }, LOG_TIMEOUT_MS);
+                }, true);
+
+                debug('logger hooked ✔');
+            }
+
+            // Esperar DOM e o form aparecer (Webflow pode injetar tarde)
+            function waitForForm(maxMs) {
+                const t0 = performance.now();
+                return new Promise((resolve) => {
+                    (function tick() {
+                        const form = document.querySelector('form#wf-form-Form');
+                        if (form) return resolve(form);
+                        if (performance.now() - t0 > maxMs) return resolve(null);
+                        setTimeout(tick, 100);
+                    })();
+                });
+            }
+
+            function start() {
+                waitForForm(5000).then((form) => {
+                    if (!form) { err('form#wf-form-Form not found (timeout)'); return; }
+                    hook(form);
+                    // auto-ping para confirmar que chega à Sheet
+                    sendLog(baseContext(form, { kind: 'page_ping' }));
+                    debug('You can run window.hmLogTest() in console to send a test log.');
+                });
+            }
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(start, 0);
+            } else {
+                window.addEventListener('DOMContentLoaded', start);
             }
         })();
     }
