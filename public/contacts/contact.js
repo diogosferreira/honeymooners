@@ -394,31 +394,43 @@ export function contact() {
         }
 
 
-        // keep #ddi, #Phone, #phone_number_ddi in sync
-        /*function updateFields(format = "NATIONAL") {
-            const fmt = window.intlTelInputUtils?.numberFormat?.[format];
-            const value = fmt ? iti.getNumber(fmt) : input.value;
-            // show formatted number in the visible input (optional)
-            input.value = value;
 
+        // FALLBACK CONTACTOS ——————————————————————————————-
+        // FALLBACK CONTACTOS ——————————————————————————————-
+        // FALLBACK CONTACTOS ——————————————————————————————-      
+
+        /*function updateFields() {
             const ddi = "+" + iti.getSelectedCountryData().dialCode;
+            const phone = input.value.replace(/\D/g, ""); // só dígitos
+
+            // mantem valores em sync
             $("#ddi").val(ddi);
-            $("#Phone").val(value);
-            $("#phone_number_ddi").val(ddi + value);
+            $("#Phone").val(phone);
+            $("#phone_number_ddi").val(ddi + phone);
         }
 
-
         // live sync while typing / changing country
-        input.addEventListener("input", () => updateFields());
-        input.addEventListener("blur", () => updateFields("NATIONAL"));
-        input.addEventListener("countrychange", () => updateFields());*/
+        input.addEventListener("input", updateFields);
+        input.addEventListener("blur", updateFields);
+        input.addEventListener("countrychange", updateFields);*/
+
+
+
+
+        /*$('#phone-number-country').on('input', function () {
+                    // if you want exact mirror:
+                    $('#Phone').val(this.value);
+        });*/
+
+
+
 
         //only allow numbers
         $("#phone-number-country").on("input", function () {
             this.value = this.value.replace(/\D/g, "");
         });
 
-        console.log("em teste");
+        //console.log("em teste");
 
         //—— Initial values
         //————————————————————————————————————————————————————————
@@ -633,5 +645,111 @@ export function contact() {
 
 
 
+
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+    ///                LOGS DE ERROS SUBMISSAO
+    ///                LOGS DE ERROS SUBMISSAO
+    ///                LOGS DE ERROS SUBMISSAO
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+    /// ——————————————————————————————————————————————————————————————————————————————————————————
+
+
+    if (location.hostname === 'honeymooners-staging.webflow.io') {
+
+        (function initFormDebugLogger() {
+            const form = document.querySelector('form#wf-form-Form');
+            if (!form) return;
+
+            // COLA AQUI O URL DA TUA APPS SCRIPT *DEPLOYED* (termina em /exec)
+            const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycby6YpFk0GExx05aqe4YiHJeefPCBLxnETbD5eqyTyVBw0xtiYPUI4JVmupA7dJcySl9/exec';
+            const LOG_TIMEOUT_MS = 12000;
+
+            function sendLog(payload) {
+                try {
+                    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                    if (navigator.sendBeacon && navigator.sendBeacon(LOG_ENDPOINT, blob)) return;
+                    fetch(LOG_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), keepalive: true });
+                } catch (e) { }
+            }
+
+            function baseContext(extra = {}) {
+                const nav = navigator || {};
+                const conn = nav.connection || {};
+                const formData = {};
+                try { new FormData(form).forEach((v, k) => { formData[k] = String(v).slice(0, 500); }); } catch (e) { }
+
+                return Object.assign({
+                    ts: new Date().toISOString(),
+                    url: location.href,
+                    referrer: document.referrer || '',
+                    ua: nav.userAgent || '',
+                    online: nav.onLine,
+                    lang: (nav.languages && nav.languages.join(',')) || nav.language || '',
+                    net_effectiveType: conn.effectiveType || '',
+                    net_rtt: conn.rtt || '',
+                    viewport: `${window.innerWidth}x${window.innerHeight}`,
+                    form_validity: form.checkValidity ? form.checkValidity() : 'unknown',
+                    form_data: formData
+                }, extra);
+            }
+
+            window.addEventListener('error', (ev) => {
+                sendLog(baseContext({ kind: 'js_error', message: ev.message || '', filename: ev.filename || '', lineno: ev.lineno || 0, colno: ev.colno || 0 }));
+            });
+            window.addEventListener('unhandledrejection', (ev) => {
+                sendLog(baseContext({ kind: 'promise_rejection', reason: (ev.reason && (ev.reason.stack || ev.reason.message || String(ev.reason))) || '' }));
+            });
+
+            const successEl = document.querySelector('.w-form-done');
+            const failEl = document.querySelector('.w-form-fail');
+
+            function classifyFailure() {
+                if (!navigator.onLine) return 'offline';
+                if (!form.checkValidity()) return 'required_missing';
+                if (failEl && getComputedStyle(failEl).display !== 'none') return 'webflow_fail_block';
+                return 'timeout_or_unknown';
+            }
+
+            form.addEventListener('submit', function () {
+                const start = performance.now();
+                sendLog(baseContext({ kind: 'submit_attempt' }));
+
+                let done = false;
+                function finish(kind, extra = {}) {
+                    if (done) return; done = true;
+                    sendLog(baseContext(Object.assign({ kind, duration_ms: Math.round(performance.now() - start) }, extra)));
+                }
+
+                const successCheck = setInterval(() => {
+                    if (successEl && getComputedStyle(successEl).display !== 'none') {
+                        clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
+                        finish('submit_success');
+                    }
+                }, 200);
+
+                const failCheck = setInterval(() => {
+                    if (failEl && getComputedStyle(failEl).display !== 'none') {
+                        clearInterval(successCheck); clearInterval(failCheck); clearTimeout(timeoutId);
+                        finish('submit_failure', { reason: classifyFailure() });
+                    }
+                }, 200);
+
+                const timeoutId = setTimeout(() => {
+                    clearInterval(successCheck); clearInterval(failCheck);
+                    finish('submit_failure', { reason: classifyFailure() });
+                }, LOG_TIMEOUT_MS);
+            }, true);
+
+            const submitBtn = document.querySelector('.is-contact-form-submit');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    sendLog(baseContext({ kind: 'submit_click', online: navigator.onLine, will_validate: form.checkValidity ? form.checkValidity() : 'unknown' }));
+                });
+            }
+        })();
+    }
 
 }
