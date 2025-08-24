@@ -657,190 +657,190 @@ export function contact() {
     /// ——————————————————————————————————————————————————————————————————————————————————————————
 
 
-    //if (location.hostname === 'honeymooners-staging.webflow.io') {
+    if (location.hostname === 'honeymooners-staging.webflow.io') {
 
-    (function () {
-        if (location.hostname !== 'honeymooners-staging.webflow.io') return;
+        (function () {
+            if (location.hostname !== 'honeymooners-staging.webflow.io') return;
 
-        const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycby6YpFk0GExx05aqe4YiHJeefPCBLxnETbD5eqyTyVBw0xtiYPUI4JVmupA7dJcySl9/exec';
-        const LOG_TIMEOUT_MS = 12000;
+            const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycby6YpFk0GExx05aqe4YiHJeefPCBLxnETbD5eqyTyVBw0xtiYPUI4JVmupA7dJcySl9/exec';
+            const LOG_TIMEOUT_MS = 12000;
 
-        function debug(...a) { console.log('[FormDebug]', ...a); }
-        function warn(...a) { console.warn('[FormDebug]', ...a); }
-        function err(...a) { console.error('[FormDebug]', ...a); }
+            function debug(...a) { console.log('[FormDebug]', ...a); }
+            function warn(...a) { console.warn('[FormDebug]', ...a); }
+            function err(...a) { console.error('[FormDebug]', ...a); }
 
-        // ——— envio com beacon + fallback no-cors
-        function sendLog(payload) {
-            try {
-                const txt = JSON.stringify(payload);
-                const blob = new Blob([txt], { type: 'text/plain;charset=UTF-8' });
-                let ok = false;
-                if (navigator.sendBeacon) {
-                    ok = navigator.sendBeacon(LOG_ENDPOINT, blob);
-                    //debug('sendBeacon ->', ok ? 'queued' : 'rejected', payload.kind || '');
-                    if (ok) return;
-                } else {
-                    // debug('sendBeacon not supported');
-                }
-                debug('fallback fetch no-cors', payload.kind || '');
-                fetch(LOG_ENDPOINT, { method: 'POST', body: txt, mode: 'no-cors', keepalive: true })
-                    .then(() => debug('fallback fetch completed (opaque response)'))
-                    .catch(e => err('fallback fetch error', e));
-            } catch (e) { err('sendLog exception', e); }
-        }
-
-        // teste manual no console: hmLogTest()
-        window.hmLogTest = function (extra) {
-            const p = Object.assign({ kind: 'manual_test', ts: new Date().toISOString(), url: location.href }, extra || {});
-            //debug('hmLogTest()', p);
-            sendLog(p);
-        };
-
-        function baseContext(form, extra) {
-            const nav = navigator || {};
-            const conn = nav.connection || {};
-            const formData = {};
-            try { if (form) new FormData(form).forEach((v, k) => { formData[k] = String(v).slice(0, 500); }); } catch (e) { }
-            return Object.assign({
-                ts: new Date().toISOString(),
-                url: location.href,
-                referrer: document.referrer || '',
-                ua: nav.userAgent || '',
-                online: nav.onLine,
-                lang: (nav.languages && nav.languages.join(',')) || nav.language || '',
-                net_effectiveType: (conn && conn.effectiveType) || '',
-                net_rtt: (conn && conn.rtt) || '',
-                viewport: `${window.innerWidth}x${window.innerHeight}`,
-                form_validity: form && form.checkValidity ? form.checkValidity() : 'unknown',
-                form_data: formData
-            }, extra || {});
-        }
-
-        // ——— lista campos inválidos com razão
-        function collectInvalid(form) {
-            const invalid = [];
-            try {
-                const nodes = form.querySelectorAll(':invalid');
-                nodes.forEach(el => {
-                    const name = el.name || el.id || el.getAttribute('data-name') || el.tagName;
-                    const val = (el.value || '').toString().slice(0, 200);
-                    let reason = '';
-                    try { reason = el.validationMessage || ''; } catch (_) { }
-                    invalid.push({ name, value: val, reason });
-                });
-            } catch (_) { }
-            return invalid;
-        }
-
-        // ——— watcher independente do submit
-        function startResultWatcher(form, onFinish, timeoutMs) {
-            const successEl = document.querySelector('.w-form-done');
-            const failEl = document.querySelector('.w-form-fail');
-            let finished = false;
-
-            function finish(kind, extra) {
-                if (finished) return;
-                finished = true;
-                onFinish(kind, extra || {});
-                if (observer) observer.disconnect();
-                clearTimeout(timer);
-            }
-
-            const observer = new MutationObserver(() => {
-                if (successEl && getComputedStyle(successEl).display !== 'none') {
-                    finish('submit_success');
-                } else if (failEl && getComputedStyle(failEl).display !== 'none') {
-                    finish('submit_failure', { reason: 'webflow_fail_block' });
-                }
-            });
-
-            [successEl, failEl].forEach(el => {
-                if (el) observer.observe(el, { attributes: true, attributeFilter: ['style', 'class'], childList: true, subtree: true });
-            });
-
-            const timer = setTimeout(() => {
-                const reason = (!navigator.onLine) ? 'offline'
-                    : (form && form.checkValidity && !form.checkValidity()) ? 'required_missing'
-                        : 'timeout_or_unknown';
-                finish('submit_failure', { reason });
-            }, timeoutMs);
-        }
-
-        function hook(form) {
-            debug('init with form:', form);
-
-            // erros globais
-            window.addEventListener('error', (ev) => {
-                sendLog(baseContext(form, { kind: 'js_error', message: ev.message || '', filename: ev.filename || '', lineno: ev.lineno || 0, colno: ev.colno || 0 }));
-            });
-            window.addEventListener('unhandledrejection', (ev) => {
-                sendLog(baseContext(form, { kind: 'promise_rejection', reason: (ev.reason && (ev.reason.stack || ev.reason.message || String(ev.reason))) || '' }));
-            });
-
-            // clique no submit (cobre cenários sem submit real)
-            const submitBtn = document.querySelector('.is-contact-form-submit');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', () => {
-                    sendLog(baseContext(form, { kind: 'submit_click', will_validate: form.checkValidity ? form.checkValidity() : 'unknown' }));
-
-                    // inválido → browser bloqueia antes do submit: loga e sai
-                    if (form.checkValidity && !form.checkValidity()) {
-                        const invalid = collectInvalid(form);
-                        sendLog(baseContext(form, { kind: 'client_validation_blocked', invalid_fields: invalid }));
-                        // opcional: form.reportValidity();
-                        return;
+            // ——— envio com beacon + fallback no-cors
+            function sendLog(payload) {
+                try {
+                    const txt = JSON.stringify(payload);
+                    const blob = new Blob([txt], { type: 'text/plain;charset=UTF-8' });
+                    let ok = false;
+                    if (navigator.sendBeacon) {
+                        ok = navigator.sendBeacon(LOG_ENDPOINT, blob);
+                        debug('sendBeacon ->', ok ? 'queued' : 'rejected', payload.kind || '');
+                        if (ok) return;
+                    } else {
+                        debug('sendBeacon not supported');
                     }
-
-                    // válido → inicia watcher AGORA (não esperar pelo submit)
-                    const t0 = performance.now();
-                    startResultWatcher(form, (finalKind, extra) => {
-                        sendLog(baseContext(form, {
-                            kind: finalKind,
-                            duration_ms: Math.round(performance.now() - t0),
-                            ...extra
-                        }));
-                    }, LOG_TIMEOUT_MS);
-                });
-            } else {
-                warn('submit button .is-contact-form-submit not found');
+                    debug('fallback fetch no-cors', payload.kind || '');
+                    fetch(LOG_ENDPOINT, { method: 'POST', body: txt, mode: 'no-cors', keepalive: true })
+                        .then(() => debug('fallback fetch completed (opaque response)'))
+                        .catch(e => err('fallback fetch error', e));
+                } catch (e) { err('sendLog exception', e); }
             }
 
-            // manter: quando o submit real dispara
-            form.addEventListener('submit', function () {
-                sendLog(baseContext(form, { kind: 'submit_attempt' }));
-            }, true);
+            // teste manual no console: hmLogTest()
+            window.hmLogTest = function (extra) {
+                const p = Object.assign({ kind: 'manual_test', ts: new Date().toISOString(), url: location.href }, extra || {});
+                debug('hmLogTest()', p);
+                sendLog(p);
+            };
 
-            debug('logger hooked ✔');
-        }
+            function baseContext(form, extra) {
+                const nav = navigator || {};
+                const conn = nav.connection || {};
+                const formData = {};
+                try { if (form) new FormData(form).forEach((v, k) => { formData[k] = String(v).slice(0, 500); }); } catch (e) { }
+                return Object.assign({
+                    ts: new Date().toISOString(),
+                    url: location.href,
+                    referrer: document.referrer || '',
+                    ua: nav.userAgent || '',
+                    online: nav.onLine,
+                    lang: (nav.languages && nav.languages.join(',')) || nav.language || '',
+                    net_effectiveType: (conn && conn.effectiveType) || '',
+                    net_rtt: (conn && conn.rtt) || '',
+                    viewport: `${window.innerWidth}x${window.innerHeight}`,
+                    form_validity: form && form.checkValidity ? form.checkValidity() : 'unknown',
+                    form_data: formData
+                }, extra || {});
+            }
 
-        // esperar o form (Webflow pode injetar tarde)
-        function waitForForm(maxMs) {
-            const t0 = performance.now();
-            return new Promise(resolve => {
-                (function tick() {
-                    const form = document.querySelector('form#wf-form-Form');
-                    if (form) return resolve(form);
-                    if (performance.now() - t0 > maxMs) return resolve(null);
-                    setTimeout(tick, 100);
-                })();
-            });
-        }
+            // ——— lista campos inválidos com razão
+            function collectInvalid(form) {
+                const invalid = [];
+                try {
+                    const nodes = form.querySelectorAll(':invalid');
+                    nodes.forEach(el => {
+                        const name = el.name || el.id || el.getAttribute('data-name') || el.tagName;
+                        const val = (el.value || '').toString().slice(0, 200);
+                        let reason = '';
+                        try { reason = el.validationMessage || ''; } catch (_) { }
+                        invalid.push({ name, value: val, reason });
+                    });
+                } catch (_) { }
+                return invalid;
+            }
 
-        function start() {
-            waitForForm(5000).then(form => {
-                if (!form) { err('form#wf-form-Form not found (timeout)'); return; }
-                hook(form);
-                sendLog(baseContext(form, { kind: 'page_ping' }));
-                debug('You can run window.hmLogTest() in console to send a test log.');
-            });
-        }
+            // ——— watcher independente do submit
+            function startResultWatcher(form, onFinish, timeoutMs) {
+                const successEl = document.querySelector('.w-form-done');
+                const failEl = document.querySelector('.w-form-fail');
+                let finished = false;
 
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setTimeout(start, 0);
-        } else {
-            window.addEventListener('DOMContentLoaded', start);
-        }
-    })();
-    // }
+                function finish(kind, extra) {
+                    if (finished) return;
+                    finished = true;
+                    onFinish(kind, extra || {});
+                    if (observer) observer.disconnect();
+                    clearTimeout(timer);
+                }
+
+                const observer = new MutationObserver(() => {
+                    if (successEl && getComputedStyle(successEl).display !== 'none') {
+                        finish('submit_success');
+                    } else if (failEl && getComputedStyle(failEl).display !== 'none') {
+                        finish('submit_failure', { reason: 'webflow_fail_block' });
+                    }
+                });
+
+                [successEl, failEl].forEach(el => {
+                    if (el) observer.observe(el, { attributes: true, attributeFilter: ['style', 'class'], childList: true, subtree: true });
+                });
+
+                const timer = setTimeout(() => {
+                    const reason = (!navigator.onLine) ? 'offline'
+                        : (form && form.checkValidity && !form.checkValidity()) ? 'required_missing'
+                            : 'timeout_or_unknown';
+                    finish('submit_failure', { reason });
+                }, timeoutMs);
+            }
+
+            function hook(form) {
+                debug('init with form:', form);
+
+                // erros globais
+                window.addEventListener('error', (ev) => {
+                    sendLog(baseContext(form, { kind: 'js_error', message: ev.message || '', filename: ev.filename || '', lineno: ev.lineno || 0, colno: ev.colno || 0 }));
+                });
+                window.addEventListener('unhandledrejection', (ev) => {
+                    sendLog(baseContext(form, { kind: 'promise_rejection', reason: (ev.reason && (ev.reason.stack || ev.reason.message || String(ev.reason))) || '' }));
+                });
+
+                // clique no submit (cobre cenários sem submit real)
+                const submitBtn = document.querySelector('.is-contact-form-submit');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', () => {
+                        sendLog(baseContext(form, { kind: 'submit_click', will_validate: form.checkValidity ? form.checkValidity() : 'unknown' }));
+
+                        // inválido → browser bloqueia antes do submit: loga e sai
+                        if (form.checkValidity && !form.checkValidity()) {
+                            const invalid = collectInvalid(form);
+                            sendLog(baseContext(form, { kind: 'client_validation_blocked', invalid_fields: invalid }));
+                            // opcional: form.reportValidity();
+                            return;
+                        }
+
+                        // válido → inicia watcher AGORA (não esperar pelo submit)
+                        const t0 = performance.now();
+                        startResultWatcher(form, (finalKind, extra) => {
+                            sendLog(baseContext(form, {
+                                kind: finalKind,
+                                duration_ms: Math.round(performance.now() - t0),
+                                ...extra
+                            }));
+                        }, LOG_TIMEOUT_MS);
+                    });
+                } else {
+                    warn('submit button .is-contact-form-submit not found');
+                }
+
+                // manter: quando o submit real dispara
+                form.addEventListener('submit', function () {
+                    sendLog(baseContext(form, { kind: 'submit_attempt' }));
+                }, true);
+
+                debug('logger hooked ✔');
+            }
+
+            // esperar o form (Webflow pode injetar tarde)
+            function waitForForm(maxMs) {
+                const t0 = performance.now();
+                return new Promise(resolve => {
+                    (function tick() {
+                        const form = document.querySelector('form#wf-form-Form');
+                        if (form) return resolve(form);
+                        if (performance.now() - t0 > maxMs) return resolve(null);
+                        setTimeout(tick, 100);
+                    })();
+                });
+            }
+
+            function start() {
+                waitForForm(5000).then(form => {
+                    if (!form) { err('form#wf-form-Form not found (timeout)'); return; }
+                    hook(form);
+                    sendLog(baseContext(form, { kind: 'page_ping' }));
+                    debug('You can run window.hmLogTest() in console to send a test log.');
+                });
+            }
+
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                setTimeout(start, 0);
+            } else {
+                window.addEventListener('DOMContentLoaded', start);
+            }
+        })();
+    }
 
 }
