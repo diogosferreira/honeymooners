@@ -665,6 +665,8 @@ export function contact() {
         //const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycby6YpFk0GExx05aqe4YiHJeefPCBLxnETbD5eqyTyVBw0xtiYPUI4JVmupA7dJcySl9/exec';
         const LOG_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx89qdHt0i0_W9FyPsy_xsJVJCX2UEYRKPIVWSVVMqsd3U5M9phriknfZXJqlLSXFKu/exec';
 
+        console.log("send");
+
         const LOG_TIMEOUT_MS = 12000;
 
         function debug(...a) { console.log('[FormDebug]', ...a); }
