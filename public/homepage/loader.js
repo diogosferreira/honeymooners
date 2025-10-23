@@ -48,10 +48,9 @@ export function loader() {
                         targetElement.text(numberWithCommas(100));
 
 
-                        if (window.location.hostname === "honeymooners-staging.webflow.io") {
-                            //console.log("now");
-                            $('#hero_video_home')[0].play();
-                        }
+
+                        $('#hero_video_home')[0].play();
+
 
 
                         // Animate .section_loader out of view and run code after animation completes
