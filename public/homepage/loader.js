@@ -49,8 +49,8 @@ export function loader() {
 
 
                         if (window.location.hostname === "honeymooners-staging.webflow.io") {
-                            console.log("now");
-                            //$('#hero_video_home')[0].pause();
+                            //console.log("now");
+                            $('#hero_video_home')[0].play();
                         }
 
 
