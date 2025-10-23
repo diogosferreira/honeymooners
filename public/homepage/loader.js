@@ -47,6 +47,13 @@ export function loader() {
                         // Ensure the final value is set in the DOM
                         targetElement.text(numberWithCommas(100));
 
+
+                        if (window.location.hostname === "honeymooners-staging.webflow.io") {
+                            console.log("now");
+                            //$('#hero_video_home')[0].pause();
+                        }
+
+
                         // Animate .section_loader out of view and run code after animation completes
                         gsap.to(".section_loader", {
                             y: "-100%",
@@ -95,6 +102,9 @@ export function loader() {
                 },
             }
         );
+
+
+
 
         // Helper function to add commas to numbers
         function numberWithCommas(n) {
