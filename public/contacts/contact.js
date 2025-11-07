@@ -410,12 +410,6 @@ export function contact() {
         }
 
         // live sync while typing / changing country
-        input.addEventListener("input", updateFields);
-        input.addEventListener("blur", updateFields);
-        input.addEventListener("countrychange", updateFields);*/
-
-
-
 
         /*$('#phone-number-country').on('input', function () {
                     // if you want exact mirror:
@@ -448,6 +442,21 @@ export function contact() {
         //————————————————————————————————————————————————————————
         //————————————————————————————————————————————————————————
 
+
+        //—— Update phone values on type
+        //————————————————————————————————————————————————————————
+        if (location.hostname.includes("honeymooners-staging")) {
+            input.addEventListener("input", updateFields);
+            input.addEventListener("blur", updateFields);
+            input.addEventListener("countrychange", updateFields);
+        }
+
+
+
+        //—— Update values on submit
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
+        //————————————————————————————————————————————————————————
         var form = $(input).closest("form");
         form.on("submit", function () {
             console.log("submit");
@@ -655,9 +664,6 @@ export function contact() {
     /// ——————————————————————————————————————————————————————————————————————————————————————————
     /// ——————————————————————————————————————————————————————————————————————————————————————————
     /// ——————————————————————————————————————————————————————————————————————————————————————————
-
-
-
 
     (function () {
         if (location.hostname !== 'honeymooners-staging.webflow.io') return;
