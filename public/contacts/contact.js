@@ -445,28 +445,29 @@ export function contact() {
 
         //—— Update phone values on type
         //————————————————————————————————————————————————————————
-        if (location.hostname.includes("honeymooners-staging")) {
+        // última alteração diogo - 20/11/225
+        //if (location.hostname.includes("honeymooners-staging")) {
 
-            function updateFields() {
-                const dialData = iti.getSelectedCountryData?.();
-                if (!dialData) return;
+        function updateFields() {
+            const dialData = iti.getSelectedCountryData?.();
+            if (!dialData) return;
 
-                const ddi = "+" + dialData.dialCode;
-                const phone = input.value.replace(/\D/g, ""); // only digits
-                const combined = ddi + phone;
+            const ddi = "+" + dialData.dialCode;
+            const phone = input.value.replace(/\D/g, ""); // only digits
+            const combined = ddi + phone;
 
-                // Only update if values changed — avoids unnecessary reflows
-                if ($("#ddi").val() !== ddi) $("#ddi").val(ddi);
-                if ($("#Phone").val() !== phone) $("#Phone").val(phone);
-                if ($("#phone_number_ddi").val() !== combined) $("#phone_number_ddi").val(combined);
-            }
-
-
-
-            input.addEventListener("input", updateFields);
-            input.addEventListener("blur", updateFields);
-            input.addEventListener("countrychange", updateFields);
+            // Only update if values changed — avoids unnecessary reflows
+            if ($("#ddi").val() !== ddi) $("#ddi").val(ddi);
+            if ($("#Phone").val() !== phone) $("#Phone").val(phone);
+            if ($("#phone_number_ddi").val() !== combined) $("#phone_number_ddi").val(combined);
         }
+
+
+
+        input.addEventListener("input", updateFields);
+        input.addEventListener("blur", updateFields);
+        input.addEventListener("countrychange", updateFields);
+        //}
 
 
 
