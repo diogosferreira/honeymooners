@@ -8,7 +8,7 @@ export function thankYouRedirect() {
 
         // Run only on the base /thank-you (no lang folder)
         const lang = sessionStorage.getItem("site_lang") || "en";
-        console.log("lang");
+        console.log("lang " + lang);
         //window.location.href = `/${lang}/thank-you`;
 
 
