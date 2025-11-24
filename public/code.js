@@ -9,6 +9,7 @@ import { form } from './contacts/form.js';
 import { autoComplete } from './contacts/autocomplete.js';
 import { userLocation } from './contacts/user-location.js';
 import { dropdownScroll } from './contacts/dropdown-scroll.js';
+import { thankYouRedirect } from './contacts/thank-you-redirect.js';
 import { filters } from './blog/filters.js';
 import { travelWithUs } from './travel-with-us/travel-with-us.js';
 import { storyGSAP } from './our-story/story-gsap-animations.js';
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     GSAPTitles();
 });
 
-
+thankYouRedirect();
 loader();
 customContactLink();
 lockScrollLoader();

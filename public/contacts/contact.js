@@ -4,6 +4,17 @@ export function contact() {
 
 
 
+    //REDIRECT THANK YOU
+    //REDIRECT THANK YOU
+    //REDIRECT THANK YOU
+    if (location.hostname.includes("honeymooners-staging")) {
+        // SAVE LANGUAGE ON EVERY PAGE LOAD
+        const lang = window.location.pathname.split("/")[1] || "en";
+        sessionStorage.setItem("site_lang", lang);
+    }
+
+    //
+    //
     //
     $(".radio-button-border").removeClass("is-active");
 
@@ -117,29 +128,29 @@ export function contact() {
         },
         function (start, end) {
             const formattedRange = `${start.format("DD/MM/YYYY")} - ${end.format("DD/MM/YYYY")}`;
-
+ 
             // Update combined field display
             this.element.val(formattedRange);
-
+ 
             // Update departure field
             $("[data-date-type='departure']").val(start.format("DD/MM/YYYY"));
-
+ 
             // Update arrival field
             $("[data-date-type='arrival']").val(end.format("DD/MM/YYYY"));
         }
     );*/
 
     /*
-
+ 
 } else {
-
-
+ 
+ 
     const today = moment().startOf("day");
-
+ 
     $("[ms-code-input='date']").each(function () {
         const $input = $(this);
         const type = $input.attr("data-date-type");
-
+ 
         $input.daterangepicker(
             {
                 singleDatePicker: true,
@@ -152,22 +163,22 @@ export function contact() {
             function (chosen_date) {
                 const formatted = chosen_date.format("DD/MM/YYYY");
                 const isoFormatted = chosen_date.format("YYYY-MM-DD");
-
+ 
                 this.element.val(formatted);
-
+ 
                 const selectedType = this.element.attr("data-date-type");
                 if (selectedType) {
                     $(`[data-date-submit='${selectedType}']`).val(isoFormatted);
                 }
-
+ 
                 if (selectedType === "departure") {
                     const arrivalInput = $("[data-date-type='arrival']");
                     const arrivalPicker = arrivalInput.data("daterangepicker");
-
+ 
                     // Atualiza o minDate do calendário de chegada
                     arrivalPicker.minDate = chosen_date.clone().add(1, "day");
                     arrivalPicker.updateView();
-
+ 
                     // Verifica se já foi selecionada uma data de chegada
                     const currentArrival = arrivalInput.val();
                     if (currentArrival) {
@@ -182,7 +193,7 @@ export function contact() {
             }
         );
     });
-
+ 
 }*/
 
 
@@ -402,15 +413,15 @@ export function contact() {
         /*function updateFields() {
             const ddi = "+" + iti.getSelectedCountryData().dialCode;
             const phone = input.value.replace(/\D/g, ""); // só dígitos
-
+ 
             // mantem valores em sync
             $("#ddi").val(ddi);
             $("#Phone").val(phone);
             $("#phone_number_ddi").val(ddi + phone);
         }
-
+ 
         // live sync while typing / changing country
-
+ 
         /*$('#phone-number-country').on('input', function () {
                     // if you want exact mirror:
                     $('#Phone').val(this.value);
