@@ -4,12 +4,19 @@ export function thankYouRedirect() {
 
     if (location.hostname.includes("honeymooners-staging")) {
 
+        // Redirect logic on bare /thank-you (no lang folder)
         const currentPath = window.location.pathname;
-
-        // Run only on the base /thank-you (no lang folder)
-        const lang = sessionStorage.getItem("site_lang") || "en";
-        console.log("lang " + lang);
-        //window.location.href = `/${lang}/thank-you`;
+        if (currentPath === "/thank-you") {
+            const lang = sessionStorage.getItem("site_lang");
+            if (lang && allowedLangs.includes(lang)) {
+                // avoid redirect loop if already on the correct path
+                const target = `/${lang}/thank-you`;
+                if (window.location.pathname !== target) {
+                    window.location.href = target;
+                }
+            }
+            // else: no valid lang saved -> assume EN and do nothing
+        }
 
 
 

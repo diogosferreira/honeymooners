@@ -9,8 +9,14 @@ export function contact() {
     //REDIRECT THANK YOU
     if (location.hostname.includes("honeymooners-staging")) {
         // SAVE LANGUAGE ON EVERY PAGE LOAD
-        const lang = window.location.pathname.split("/")[1] || "en";
-        sessionStorage.setItem("site_lang", lang);
+        const allowedLangs = ["pt", "br", "es"];
+        const pathParts = window.location.pathname.split("/").filter(Boolean); // remove empty parts
+        const first = pathParts[0] || "";
+
+        // Save language only when it's a valid language segment
+        if (allowedLangs.includes(first)) {
+            sessionStorage.setItem("site_lang", first);
+        }
     }
 
     //
