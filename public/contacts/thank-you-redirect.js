@@ -4,6 +4,7 @@ export function thankYouRedirect() {
 
     if (location.hostname.includes("honeymooners-staging")) {
 
+        const allowedLangs = ["pt", "br", "es"];
         // Redirect logic on bare /thank-you (no lang folder)
         const currentPath = window.location.pathname;
         if (currentPath === "/thank-you") {
