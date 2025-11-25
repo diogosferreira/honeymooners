@@ -7,19 +7,17 @@ export function contact() {
     //REDIRECT THANK YOU
     //REDIRECT THANK YOU
     //REDIRECT THANK YOU
-    if (location.hostname.includes("honeymooners-staging")) {
-        // SAVE LANGUAGE ON EVERY PAGE LOAD
-        const allowedLangs = ["pt", "br", "es"];
-        const pathParts = window.location.pathname.split("/").filter(Boolean); // remove empty parts
-        const first = pathParts[0] || "";
+    //if (location.hostname.includes("honeymooners-staging")) {
+    // SAVE LANGUAGE ON EVERY PAGE LOAD
+    const allowedLangs = ["pt", "br", "es"];
+    const pathParts = window.location.pathname.split("/").filter(Boolean); // remove empty parts
+    const first = pathParts[0] || "";
 
-
-        console.log("first --- " + first);
-        // Save language only when it's a valid language segment
-        if (allowedLangs.includes(first)) {
-            sessionStorage.setItem("site_lang", first);
-        }
+    // Save language only when it's a valid language segment
+    if (allowedLangs.includes(first)) {
+        sessionStorage.setItem("site_lang", first);
     }
+    //}
 
     //
     //
