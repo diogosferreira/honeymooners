@@ -22,7 +22,7 @@ export function destinationAnimation() {
                 ease: "power1.out",
                 scrollTrigger: {
                     trigger: this,
-                    start: "top 15%",
+                    start: "top 12%",
                     end: "top top",
                     scrub: true,
                 },
