@@ -25,12 +25,21 @@ export function userLocation() {
     const euroInternationalRanges = ["3000-5000€", "5000–8000€", "8000–12000€", "+12000€"];
 
 
+
+    const brlRanges = [
+        "R$25.000-35.000",
+        "R$35.000–50.000",
+        "R$50.000–70.000",
+        "+R$70.000",
+    ];
+
+    /*
     const brlRanges = [
         "R$20.000-30.000",
         "R$30.000–40.000",
         "R$40.000–50.000",
         "+R$50.000",
-    ];
+    ];*/
 
     const esRanges = [
         "2000-3500USD",
