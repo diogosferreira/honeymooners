@@ -1,0 +1,26 @@
+{
+  "name": "honeymooners",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diogosferreira/honeymooners.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/diogosferreira/honeymooners/issues"
+  },
+  "homepage": "https://github.com/diogosferreira/honeymooners#readme",
+  "devDependencies": {
+    "vite": "^6.4.1"
+  }
+}
