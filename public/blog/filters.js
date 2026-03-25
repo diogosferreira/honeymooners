@@ -10,6 +10,12 @@ export function filters() {
             searchInput.addEventListener("input", () => {
                 searchBlogItems(blogList, searchInput.value.trim());
             });
+
+            searchInput.removeAttribute("required");
+
+            searchInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") e.preventDefault();
+            });
         }
     }
 
