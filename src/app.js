@@ -30,9 +30,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 
-document.addEventListener("DOMContentLoaded", function () {
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+        GSAPTitles();
+    });
+} else {
     GSAPTitles();
-});
+}
 
 thankYouRedirect();
 loader();

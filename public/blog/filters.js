@@ -76,6 +76,7 @@ function searchBlogItems(list, query) {
     if (!query) {
         items.forEach(item => { item.style.display = ""; });
         sortBlogItems(list);
+        ScrollTrigger.refresh();
         return;
     }
 
@@ -103,6 +104,8 @@ function searchBlogItems(list, query) {
             return 0;
         })
         .forEach(({ item }) => list.appendChild(item));
+
+    ScrollTrigger.refresh();
 }
 
 function sortBlogItems(list) {
@@ -127,4 +130,5 @@ function sortBlogItems(list) {
     });
 
     items.forEach(item => list.appendChild(item));
+    ScrollTrigger.refresh();
 }
