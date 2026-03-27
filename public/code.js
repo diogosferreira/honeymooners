@@ -1,5 +1,3 @@
-console.log('🚀 Honeymooners code loaded');
-
 import { loader } from './homepage/loader.js';
 import { lockScrollLoader } from './homepage/lock-scroll-load.js';
 import { swiperTestimonials } from './swiper/swiper-testimonials.js';

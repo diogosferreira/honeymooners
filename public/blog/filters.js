@@ -1,10 +1,6 @@
 export function filters() {
     function init() {
         const blogList = document.querySelector(".blog-posts_wrapper .w-dyn-items");
-        console.log("[filters] blogList:", blogList);
-        console.log("[filters] readyState:", document.readyState);
-        console.log("[filters] all .w-dyn-items:", document.querySelectorAll(".w-dyn-items").length);
-        console.log("[filters] .blog-posts_wrapper:", document.querySelector(".blog-posts_wrapper"));
         if (!blogList) return;
 
         sortBlogItems(blogList);
@@ -64,9 +60,11 @@ function getSearchScore(title, query) {
     }
 
     for (const word of words) {
-        const maxDist = q.length <= 4 ? 1 : 2;
-        if (levenshtein(word.substring(0, q.length), q) <= maxDist) return 3;
-        if (levenshtein(word, q) <= maxDist) return 3;
+        const maxDist = q.length <= 5 ? 1 : 2;
+        if (word.length >= q.length - 1 && word.length <= q.length + 1) {
+            if (levenshtein(word, q) <= maxDist) return 3;
+        }
+        if (word.length > q.length + 1 && levenshtein(word.substring(0, q.length), q) <= 1) return 3;
     }
 
     return -1;
@@ -109,14 +107,6 @@ function searchBlogItems(list, query) {
 
 function sortBlogItems(list) {
     const items = Array.from(list.querySelectorAll(":scope > .w-dyn-item"));
-    const featured = items.filter(i => i.querySelector(".featured-blog-toggle") !== null);
-    console.log("[filters] sort - items:", items.length, "featured:", featured.length);
-    if (items.length > 0) {
-        const first = items[0];
-        console.log("[filters] first item title:", first.querySelector('[data-blog-filter="title"]')?.textContent?.trim());
-        console.log("[filters] first item featured:", first.querySelector(".featured-blog-toggle"));
-        console.log("[filters] first item date:", first.querySelector("[filter-publish-date]")?.getAttribute("filter-publish-date"));
-    }
 
     items.sort((a, b) => {
         const aFeatured = a.querySelector(".featured-blog-toggle") !== null;
