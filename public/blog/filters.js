@@ -3,20 +3,45 @@ export function filters() {
         const blogList = document.querySelector(".blog-posts_wrapper .w-dyn-items");
         if (!blogList) return;
 
-        sortBlogItems(blogList);
+        // const dynList = blogList.closest(".w-dyn-list");
 
-        const searchInput = document.querySelector(".is-blog-search");
-        if (searchInput) {
-            searchInput.addEventListener("input", () => {
-                searchBlogItems(blogList, searchInput.value.trim());
-            });
+        // function setup() {
+            sortBlogItems(blogList);
 
-            searchInput.removeAttribute("required");
+            const searchInput = document.querySelector(".is-blog-search");
+            if (searchInput) {
+                searchInput.addEventListener("input", () => {
+                    searchBlogItems(blogList, searchInput.value.trim());
+                });
 
-            searchInput.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") e.preventDefault();
-            });
-        }
+                searchInput.removeAttribute("required");
+
+                searchInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") e.preventDefault();
+                });
+            }
+        // }
+
+        // PLAN: Finsweet List Load V2 integration
+        // See plan: .claude/plans/peppy-churning-deer.md
+        // When ready, uncomment the code below and wrap the sort/search above inside setup()
+        //
+        // if (dynList && dynList.classList.contains("is-list-loading")) {
+        //     var debounceTimer;
+        //     var observer = new MutationObserver(function () {
+        //         clearTimeout(debounceTimer);
+        //         debounceTimer = setTimeout(function () {
+        //             if (!dynList.classList.contains("is-list-loading")) {
+        //                 observer.disconnect();
+        //                 setup();
+        //             }
+        //         }, 500);
+        //     });
+        //     observer.observe(dynList, { attributes: true, attributeFilter: ["class"] });
+        //     observer.observe(blogList, { childList: true });
+        // } else {
+        //     setup();
+        // }
     }
 
     if (document.readyState === "loading") {

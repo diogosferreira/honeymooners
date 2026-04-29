@@ -12,7 +12,14 @@ export function GSAPTitles() {
             type: "chars",
             //charsClass: "single-char",
         });
-        gsap.set("[text-split]", { opacity: 1 });
+        // PREVENT-FLICKER: was `{ opacity: 1 }`. autoAlpha flips both
+        // visibility:visible + opacity:1 immediately so the CSS visibility:hidden
+        // (set in Webflow head) is overridden as soon as JS runs.
+        gsap.set("[text-split]", { autoAlpha: 1 });
+
+        // Also unhide [gsap-title-letter] elements (they wrap the text-split chars
+        // and may have their own visibility:hidden from the CSS rule).
+        gsap.set("[gsap-title-letter]", { autoAlpha: 1 });
     }
 
     //MAIN TITLES

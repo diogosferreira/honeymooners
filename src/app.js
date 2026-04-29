@@ -64,3 +64,31 @@ chooseSection();
 map();
 
 
+// =====================================================================
+// PREVENT-FLICKER SAFETY FALLBACK (2026-04-28)
+// CSS in Webflow head sets visibility:hidden on animated elements.
+// If GSAP fails to flip visibility for any reason (script error, slow load,
+// dynamic content), this timeout forces all hidden animated elements to show
+// after 5 seconds so users never see a permanently invisible block.
+// To revert: remove this entire block.
+// =====================================================================
+setTimeout(function () {
+    var sels = [
+        "[opacity-gsap-top-90]",
+        "[opacity-gsap-delay-05]",
+        "[opacity-gsap-top-90-delay-05]",
+        "[opacity-gsap-top-80]",
+        "[gsap-move-from-left]",
+        "[gsap-move-from-right]",
+        "[text-split]",
+        "[gsap-title-letter]"
+    ];
+    document.querySelectorAll(sels.join(",")).forEach(function (el) {
+        if (getComputedStyle(el).visibility === "hidden") {
+            el.style.visibility = "visible";
+            el.style.opacity = "1";
+        }
+    });
+}, 5000);
+
+

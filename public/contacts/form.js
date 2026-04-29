@@ -8,6 +8,11 @@ export function form() {
             .addClass("is-active")
             .siblings(".radio-button-border")
             .removeClass("is-active");
+
+        var radio = $(this).find('input[type="radio"]');
+        if (radio.length) {
+            radio.prop("checked", true);
+        }
     });
 
 }
