@@ -3,9 +3,9 @@ export function filters() {
         const blogList = document.querySelector(".blog-posts_wrapper .w-dyn-items");
         if (!blogList) return;
 
-        // const dynList = blogList.closest(".w-dyn-list");
+        const dynList = blogList.closest(".w-dyn-list");
 
-        // function setup() {
+        function setup() {
             sortBlogItems(blogList);
 
             const searchInput = document.querySelector(".is-blog-search");
@@ -20,28 +20,28 @@ export function filters() {
                     if (e.key === "Enter") e.preventDefault();
                 });
             }
-        // }
+        }
 
-        // PLAN: Finsweet List Load V2 integration
-        // See plan: .claude/plans/peppy-churning-deer.md
-        // When ready, uncomment the code below and wrap the sort/search above inside setup()
-        //
-        // if (dynList && dynList.classList.contains("is-list-loading")) {
-        //     var debounceTimer;
-        //     var observer = new MutationObserver(function () {
-        //         clearTimeout(debounceTimer);
-        //         debounceTimer = setTimeout(function () {
-        //             if (!dynList.classList.contains("is-list-loading")) {
-        //                 observer.disconnect();
-        //                 setup();
-        //             }
-        //         }, 500);
-        //     });
-        //     observer.observe(dynList, { attributes: true, attributeFilter: ["class"] });
-        //     observer.observe(blogList, { childList: true });
-        // } else {
-        //     setup();
-        // }
+        // Finsweet List Load V2 integration:
+        // If Finsweet is loading additional items, wait until done before sorting.
+        // Detected via .is-list-loading class on the .w-dyn-list parent.
+        // Falls back to immediate setup when Finsweet isn't present.
+        if (dynList && dynList.classList.contains("is-list-loading")) {
+            var debounceTimer;
+            var observer = new MutationObserver(function () {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(function () {
+                    if (!dynList.classList.contains("is-list-loading")) {
+                        observer.disconnect();
+                        setup();
+                    }
+                }, 500);
+            });
+            observer.observe(dynList, { attributes: true, attributeFilter: ["class"] });
+            observer.observe(blogList, { childList: true });
+        } else {
+            setup();
+        }
     }
 
     if (document.readyState === "loading") {
