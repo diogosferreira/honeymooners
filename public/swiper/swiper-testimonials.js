@@ -16,7 +16,15 @@ export function swiperTestimonials() {
         console.warn("Element with [carroussel-total] attribute not found.");
     }
 
-    var swiper_base = new Swiper(".swiper-testimonials", {
+    // Guard: skip .swiper-testimonials elements without a valid .swiper-wrapper
+    // (e.g., empty CMS Collection Lists). Without this guard, Swiper throws
+    // "getComputedStyle" TypeError which stops all subsequent JS execution.
+    const validSwipers = Array.from(
+        document.querySelectorAll(".swiper-testimonials")
+    ).filter(el => el.querySelector(".swiper-wrapper"));
+    if (validSwipers.length === 0) return;
+
+    var swiper_base = new Swiper(validSwipers[0], {
         slidesPerView: 2.5,
         speed: 700,
         spaceBetween: 90,
