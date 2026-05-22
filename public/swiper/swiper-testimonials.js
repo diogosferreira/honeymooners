@@ -16,12 +16,15 @@ export function swiperTestimonials() {
         console.warn("Element with [carroussel-total] attribute not found.");
     }
 
-    // Guard: skip .swiper-testimonials elements without a valid .swiper-wrapper
-    // (e.g., empty CMS Collection Lists). Without this guard, Swiper throws
-    // "getComputedStyle" TypeError which stops all subsequent JS execution.
-    const validSwipers = Array.from(
-        document.querySelectorAll(".swiper-testimonials")
-    ).filter(el => el.querySelector(".swiper-wrapper"));
+    // Pages like /dream/europe have multiple .swiper-testimonials inside
+    // conditional-visibility wrappers (one per page type) — only one is visible.
+    // We need to init the VISIBLE one with a valid .swiper-wrapper, not just
+    // the first in DOM order. The .offsetParent check filters out elements
+    // hidden via display:none on themselves or any ancestor.
+    const allSwipers = document.querySelectorAll(".swiper-testimonials");
+    const validSwipers = Array.from(allSwipers).filter(el =>
+        el.querySelector(".swiper-wrapper") && el.offsetParent !== null
+    );
     if (validSwipers.length === 0) return;
 
     var swiper_base = new Swiper(validSwipers[0], {
