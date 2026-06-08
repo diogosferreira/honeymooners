@@ -59,7 +59,7 @@ export function destinationAnimation() {
             }
         );
 
-        gsap.to(component.find(".destination-title_wrapper"), {
+        gsap.to(component.find(".destination-title_wrapper, .destination-title_wrapper *"), {
             color: "#ffffff",
             ease: "power1.out",
             scrollTrigger: {
