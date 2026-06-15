@@ -1,4 +1,7 @@
 export function filters() {
+    let currentCategory = "all";
+    let currentQuery = "";
+
     function init() {
         const blogList = document.querySelector(".blog-posts_wrapper .w-dyn-items");
         if (!blogList) return;
@@ -6,12 +9,13 @@ export function filters() {
         const dynList = blogList.closest(".w-dyn-list");
 
         function setup() {
-            sortBlogItems(blogList);
+            applyFilters(blogList, currentQuery, currentCategory);
 
             const searchInput = document.querySelector(".is-blog-search");
             if (searchInput) {
                 searchInput.addEventListener("input", () => {
-                    searchBlogItems(blogList, searchInput.value.trim());
+                    currentQuery = searchInput.value.trim();
+                    applyFilters(blogList, currentQuery, currentCategory);
                 });
 
                 searchInput.removeAttribute("required");
@@ -19,6 +23,42 @@ export function filters() {
                 searchInput.addEventListener("keydown", (e) => {
                     if (e.key === "Enter") e.preventDefault();
                 });
+            }
+
+            // Move the "All" button into the same flex container as the category
+            // buttons so it lines up with them visually. The All button starts in
+            // a sibling `.filter-button-static` div (outside the CMS list).
+            const allBtnLabel = document.querySelector("#view-all-btn");
+            const filtersList = document.querySelector(".filters-list");
+            if (allBtnLabel && filtersList) {
+                const wrapper = document.createElement("div");
+                wrapper.setAttribute("role", "listitem");
+                wrapper.appendChild(allBtnLabel);
+                filtersList.insertBefore(wrapper, filtersList.firstChild);
+            }
+
+            // Category filter buttons
+            const categoryButtons = document.querySelectorAll("[data-blog-filter-category]");
+            categoryButtons.forEach((btn) => {
+                btn.addEventListener("change", () => {
+                    setActiveCategory(btn);
+                });
+                // Some Webflow radios trigger click on label without firing 'change' reliably.
+                const label = btn.closest(".filter-button");
+                if (label) {
+                    label.addEventListener("click", () => {
+                        setActiveCategory(btn);
+                    });
+                }
+            });
+
+            function setActiveCategory(btn) {
+                currentCategory = btn.getAttribute("data-blog-filter-category") || "all";
+                categoryButtons.forEach((b) => {
+                    const lbl = b.closest(".filter-button");
+                    if (lbl) lbl.classList.toggle("is-active", b === btn);
+                });
+                applyFilters(blogList, currentQuery, currentCategory);
             }
         }
 
@@ -95,42 +135,61 @@ function getSearchScore(title, query) {
     return -1;
 }
 
-function searchBlogItems(list, query) {
+function applyFilters(list, query, category) {
     const items = Array.from(list.querySelectorAll(":scope > .w-dyn-item"));
 
-    if (!query) {
-        items.forEach(item => { item.style.display = ""; });
-        sortBlogItems(list);
-        ScrollTrigger.refresh();
-        return;
-    }
+    // Step 1: filter by category (if not "all")
+    const itemsAfterCategory = items.map(item => {
+        const matchCategory = category === "all" || itemHasCategory(item, category);
+        return { item, matchCategory };
+    });
 
-    const scored = items.map(item => {
+    // Step 2: score by search query within category matches
+    const scored = itemsAfterCategory.map(({ item, matchCategory }) => {
+        if (!matchCategory) return { item, score: -1, matchCategory };
+        if (!query) return { item, score: 0, matchCategory };
+
         const titleEl = item.querySelector('[data-blog-filter="title"]');
         const title = titleEl ? titleEl.textContent.trim() : "";
         const score = getSearchScore(title, query);
-        return { item, score };
+        return { item, score, matchCategory };
     });
 
+    // Hide non-matching items
     scored.forEach(({ item, score }) => {
         item.style.display = score === -1 ? "none" : "";
     });
 
+    // Sort matching items: by search score first, then featured, then date
     scored
         .filter(s => s.score !== -1)
         .sort((a, b) => {
-            if (a.score !== b.score) return a.score - b.score;
+            if (query && a.score !== b.score) return a.score - b.score;
 
             const aFeatured = a.item.querySelector(".featured-blog-toggle") !== null;
             const bFeatured = b.item.querySelector(".featured-blog-toggle") !== null;
             if (aFeatured && !bFeatured) return -1;
             if (!aFeatured && bFeatured) return 1;
 
-            return 0;
+            if (aFeatured && bFeatured) {
+                const aOrder = parseInt(a.item.querySelector("[filter-featured-order]")?.getAttribute("filter-featured-order")) || 999;
+                const bOrder = parseInt(b.item.querySelector("[filter-featured-order]")?.getAttribute("filter-featured-order")) || 999;
+                return aOrder - bOrder;
+            }
+
+            const aDate = new Date(a.item.querySelector("[filter-publish-date]")?.getAttribute("filter-publish-date") || 0);
+            const bDate = new Date(b.item.querySelector("[filter-publish-date]")?.getAttribute("filter-publish-date") || 0);
+            return bDate - aDate;
         })
         .forEach(({ item }) => list.appendChild(item));
 
-    ScrollTrigger.refresh();
+    if (typeof ScrollTrigger !== "undefined") ScrollTrigger.refresh();
+}
+
+function itemHasCategory(item, category) {
+    const catEl = item.querySelector('[data-blog-filter="category"]');
+    if (!catEl) return false;
+    return catEl.textContent.trim().toLowerCase() === category.trim().toLowerCase();
 }
 
 function sortBlogItems(list) {
