@@ -116,20 +116,26 @@ function levenshtein(a, b) {
 function getSearchScore(title, query) {
     const t = normalize(title);
     const q = normalize(query);
+    const words = t.split(/[\s,:;.!?()'"]+/).filter(Boolean);
 
-    if (t.includes(q)) return 1;
+    // 1. Exact word match (highest priority)
+    if (words.includes(q)) return 1;
 
-    const words = t.split(/\s+/);
+    // 2. Word starts with query
     for (const word of words) {
         if (word.startsWith(q)) return 2;
     }
 
+    // 3. Title contains query as substring (lower priority — catches "oma" in "Roma")
+    if (t.includes(q)) return 3;
+
+    // 4. Fuzzy match (typo tolerance)
     for (const word of words) {
         const maxDist = q.length <= 5 ? 1 : 2;
         if (word.length >= q.length - 1 && word.length <= q.length + 1) {
-            if (levenshtein(word, q) <= maxDist) return 3;
+            if (levenshtein(word, q) <= maxDist) return 4;
         }
-        if (word.length > q.length + 1 && levenshtein(word.substring(0, q.length), q) <= 1) return 3;
+        if (word.length > q.length + 1 && levenshtein(word.substring(0, q.length), q) <= 1) return 4;
     }
 
     return -1;
