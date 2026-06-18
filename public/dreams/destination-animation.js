@@ -14,6 +14,16 @@ export function destinationAnimation() {
     $(".destination_component").each(function () {
         const component = $(this);
 
+        // When there is no .destination-main-image, the scrub animations have
+        // nothing to fade against — force the title to white immediately so it
+        // stays readable on the sticky background image.
+        if (component.find(".destination-main-image").length === 0) {
+            gsap.set(component.find(".destination-title_wrapper, .destination-title_wrapper *"), {
+                color: "#ffffff",
+            });
+            return; // skip the scroll-linked animations for this component
+        }
+
         gsap.fromTo(
             component.find(".destination-main-image"),
             { opacity: 0 },
