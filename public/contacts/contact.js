@@ -370,6 +370,18 @@ export function contact() {
         this.value = this.value.replace(/\D/g, ""); // Removes all non-digits
     });
 
+    // PASSENGER NUMBER — block negative / non-digit input across all languages
+    document.querySelectorAll('input[name="numero_passageiros"]').forEach(function (input) {
+        input.addEventListener("keydown", function (e) {
+            if (["-", "+", "e", "E"].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+        input.addEventListener("input", function () {
+            this.value = this.value.replace(/[^0-9]/g, "");
+        });
+    });
+
     // CONTRY NUMBER AND CODE ————————————————————————————————————————————————————————
     // CONTRY NUMBER AND CODE ————————————————————————————————————————————————————————
     // CONTRY NUMBER AND CODE ————————————————————————————————————————————————————————
