@@ -370,15 +370,23 @@ export function contact() {
         this.value = this.value.replace(/\D/g, ""); // Removes all non-digits
     });
 
-    // PASSENGER NUMBER — block negative / non-digit input across all languages
+    // PASSENGER NUMBER — block negative / non-digit / zero as first char across all languages
     document.querySelectorAll('input[name="numero_passageiros"]').forEach(function (input) {
         input.addEventListener("keydown", function (e) {
             if (["-", "+", "e", "E"].includes(e.key)) {
                 e.preventDefault();
             }
+            // block "0" as the first character (min is 1)
+            if (e.key === "0" && this.value === "") {
+                e.preventDefault();
+            }
         });
         input.addEventListener("input", function () {
-            this.value = this.value.replace(/[^0-9]/g, "");
+            // strip anything non-digit
+            var v = this.value.replace(/[^0-9]/g, "");
+            // strip leading zeros (handles paste, mobile keyboards)
+            v = v.replace(/^0+/, "");
+            this.value = v;
         });
     });
 
