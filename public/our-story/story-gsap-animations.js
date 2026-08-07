@@ -19,32 +19,29 @@ export function storyGSAP() {
     );
 
     if ($(window).width() > 991) {
-        gsap.fromTo(
-            "[parallax-story]",
-            { y: "50%" },
-            {
-                y: "-25%",
-                ease: "power1.inOut",
-                scrollTrigger: {
-                    trigger: ".section_our-story",
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true,
-                },
-            }
-        );
+        // Set initial position immediately to avoid jump on load before the
+        // scrollTrigger evaluates its progress.
+        gsap.set("[parallax-story]", { y: "25%" });
+        gsap.to("[parallax-story]", {
+            y: "-25%",
+            ease: "power1.inOut",
+            scrollTrigger: {
+                trigger: ".section_our-story",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+            },
+        });
     }
 
-    gsap.fromTo(
-        "[story-hero-element]",
-        { opacity: 0, y: 0 },
-        {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.1,
-            ease: "power2.inOut",
-        }
-    );
+    // Only fade — no y transform here, otherwise it fights the parallax on the
+    // same elements (both attributes are on the same nodes).
+    gsap.set("[story-hero-element]", { autoAlpha: 0 });
+    gsap.to("[story-hero-element]", {
+        autoAlpha: 1,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power2.inOut",
+    });
 
 }
