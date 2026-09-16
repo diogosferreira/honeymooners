@@ -26,42 +26,52 @@ import { map } from '../public/map/map-hover.js';
 import { customContactLink } from '../public/contacts/custom-contact-link.js';
 
 
-gsap.registerPlugin(ScrollTrigger);
+// =====================================================================
+// DOM-READY GUARD (2026-09-16)
+// This file used to ship as an ES module (type="module"), which the browser
+// defers until parsing finishes. Every call below relied on that timing.
+// The production build is a classic UMD script, which can execute earlier,
+// before later footer scripts exist (notably `const lenis = new Lenis()`,
+// used by loader()). Running init on DOMContentLoaded restores the exact
+// original timing.
+// To revert: call the functions directly again, as before.
+// =====================================================================
+function initHoneymooners() {
+    gsap.registerPlugin(ScrollTrigger);
 
-
-
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-        GSAPTitles();
-    });
-} else {
     GSAPTitles();
+
+    thankYouRedirect();
+    loader();
+    customContactLink();
+    lockScrollLoader();
+    swiperTestimonials();
+    featureTabs();
+    destinationAnimation();
+    listBullet();
+    contact();
+    form();
+    autoComplete();
+    userLocation();
+    dropdownScroll();
+    filters();
+    travelWithUs();
+    storyGSAP();
+    swiperTrips();
+    companyGSAP();
+    menu();
+
+    GSAPParallax();
+    GSAPAnimations();
+    chooseSection();
+    map();
 }
 
-thankYouRedirect();
-loader();
-customContactLink();
-lockScrollLoader();
-swiperTestimonials();
-featureTabs();
-destinationAnimation();
-listBullet();
-contact();
-form();
-autoComplete();
-userLocation();
-dropdownScroll();
-filters();
-travelWithUs();
-storyGSAP();
-swiperTrips();
-companyGSAP();
-menu();
-
-GSAPParallax();
-GSAPAnimations();
-chooseSection();
-map();
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHoneymooners, { once: true });
+} else {
+    initHoneymooners();
+}
 
 
 // =====================================================================
