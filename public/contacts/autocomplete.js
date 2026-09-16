@@ -7,7 +7,7 @@ export function autoComplete() {
     //if (window.location.hostname === "honeymooners-staging.webflow.io") {
 
 
-    document.addEventListener("DOMContentLoaded", function () {
+    function setupAutocomplete() {
         const input = document.getElementById("Aeroporto-de-partida");
 
         if (!input) {
@@ -161,7 +161,16 @@ export function autoComplete() {
                 dropdown.style.display = "none"; // ✅ hide when clicking outside
             }
         });
-    });
+    }
+
+    // The bundle now runs its init inside DOMContentLoaded, so registering a
+    // fresh listener for that same event here would never fire. Guard on
+    // readyState so this works whether the DOM is still parsing or already done.
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", setupAutocomplete, { once: true });
+    } else {
+        setupAutocomplete();
+    }
 
 
     //}
