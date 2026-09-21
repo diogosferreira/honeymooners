@@ -130,8 +130,25 @@ function getSearchScore(title, query) {
     if (t.includes(q)) return 3;
 
     // 4. Fuzzy match (typo tolerance)
+    //
+    // STAGING-ONLY TIGHTENING (2026-09-21)
+    // The prefix rule below accepts one edit anywhere in the first q.length
+    // characters of a longer word, which made "krabi" match "arabias"
+    // ("arabi" vs "krabi" is distance 1) and surfaced the Dubai and Omã posts.
+    // Typos land mid-word or at the end, virtually never on the first letter,
+    // so requiring the initial character to match kills that false positive
+    // while keeping useful tolerance. Very short queries get no fuzzy at all.
+    //
+    // Gated to staging so it can be validated against real searches before it
+    // reaches production. TO PROMOTE: delete STRICT_FUZZY and the two
+    // `STRICT_FUZZY &&` prefixes, leaving the guards unconditional.
+    const STRICT_FUZZY = location.hostname.indexOf("staging.webflow.io") !== -1;
+
+    if (STRICT_FUZZY && q.length < 4) return -1;
+
     for (const word of words) {
         const maxDist = q.length <= 5 ? 1 : 2;
+        if (STRICT_FUZZY && word[0] !== q[0]) continue;
         if (word.length >= q.length - 1 && word.length <= q.length + 1) {
             if (levenshtein(word, q) <= maxDist) return 4;
         }
