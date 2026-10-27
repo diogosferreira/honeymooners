@@ -73,3 +73,19 @@
 .daterangepicker .drp-calendar.right {
     border-left: 1px solid var(--colors--blue-dark-hover);
 }
+
+/* Orçamento: estado escolhido vem do input, não do is-active que o jQuery põe.
+   Sem isto, se o arranque falhar antes do form(), clicar não mostra nada. */
+.radio-button-border.is-active {
+    background-color: transparent !important;
+    color: var(--colors--brand-gold) !important;
+}
+
+.radio-button-border:has(input[type="radio"]:checked) {
+    background-color: var(--colors--blue-dark) !important;
+    color: #fff !important;
+}
+
+.radio-button-border:has(input[type="radio"]:checked)::before {
+    background: transparent !important;
+}
