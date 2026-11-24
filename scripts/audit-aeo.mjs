@@ -16,8 +16,9 @@ const KEY_PATHS = [
 async function sitemapUrls() {
     const res = await fetch(`${SITE}/sitemap.xml`);
     if (!res.ok) throw new Error(`sitemap ${res.status}`);
+    // em staging o sitemap aponta para o dominio de producao
     const xml = await res.text();
-    return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/^https?:\/\/[^/]+/, SITE));
 }
 
 const localeOf = (path) => (['pt', 'br', 'es'].includes(path.split('/')[1]) ? path.split('/')[1] : 'en');

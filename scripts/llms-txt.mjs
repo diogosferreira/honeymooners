@@ -21,7 +21,7 @@ const localeOf = (path) => (['pt', 'br', 'es'].includes(path.split('/')[1]) ? pa
 async function sitemapUrls() {
     const res = await fetch(`${SITE}/sitemap.xml`);
     if (!res.ok) throw new Error(`sitemap ${res.status}`);
-    return [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    return [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/^https?:\/\/[^/]+/, SITE));
 }
 
 async function meta(url) {
